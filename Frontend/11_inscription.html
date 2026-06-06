@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ServicesPlus – Inscription</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#E85D26;--pl:#FFF0EB;--gold:#F59E0B;--dark:#0F172A;--slate:#64748B;--border:#E9EEF4;--bg:#F6F8FB;--green:#059669;--blue:#2563EB}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;display:flex;flex-direction:column}
+
+    /* NAV */
+    nav{background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:66px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 3px 10px rgba(232,93,38,0.3)}
+    .logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:900}
+    .logo-text span:first-child{color:var(--primary)}
+    .logo-text span:last-child{color:var(--dark)}
+    .nav-r{margin-left:auto;display:flex;gap:10px;align-items:center}
+    .btn-link{padding:8px 18px;background:transparent;color:var(--slate);border:1.5px solid var(--border);border-radius:10px;font-weight:600;cursor:pointer;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+    .btn-link:hover{border-color:var(--primary);color:var(--primary)}
+
+    /* LAYOUT */
+    .main{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 66px)}
+
+    /* PANNEAU GAUCHE */
+    .left-panel{background:linear-gradient(145deg,#1A3560 0%,#2563EB 50%,#E85D26 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 48px}
+    .left-panel::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px);background-size:28px 28px}
+    .left-content{position:relative;text-align:center;color:white}
+    .left-logo{font-size:60px;margin-bottom:20px;display:block}
+    .left-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;margin-bottom:12px;line-height:1.2}
+    .left-title em{color:#FCD34D;font-style:normal}
+    .left-sub{color:rgba(255,255,255,0.75);font-size:14px;line-height:1.8;margin-bottom:32px}
+
+    /* AVANTAGES */
+    .avantages{display:flex;flex-direction:column;gap:14px;max-width:360px;width:100%;margin-bottom:32px}
+    .av-item{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 18px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);text-align:left}
+    .av-icon{font-size:24px;flex-shrink:0}
+    .av-title{color:white;font-weight:700;font-size:14px;margin-bottom:2px}
+    .av-sub{color:rgba(255,255,255,0.65);font-size:12px}
+
+    /* PANNEAU DROIT */
+    .right-panel{display:flex;align-items:center;justify-content:center;padding:40px;background:white;overflow-y:auto}
+    .form-wrap{width:100%;max-width:480px}
+
+    /* HEADER */
+    .form-header{text-align:center;margin-bottom:28px}
+    .form-icon{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;box-shadow:0 8px 24px rgba(232,93,38,0.3)}
+    .form-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;margin-bottom:6px}
+    .form-sub{color:var(--slate);font-size:14px}
+
+    /* STEPS */
+    .steps{display:flex;align-items:center;margin-bottom:28px}
+    .step-item{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
+    .step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;transition:all .3s}
+    .step-circle.done{background:#059669;color:white}
+    .step-circle.active{background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;box-shadow:0 4px 12px rgba(232,93,38,0.3)}
+    .step-circle.pending{background:#F1F5F9;color:#94A3B8}
+    .step-label{font-size:10px;font-weight:700;white-space:nowrap}
+    .step-label.done{color:#059669}
+    .step-label.active{color:var(--primary)}
+    .step-label.pending{color:#94A3B8}
+    .step-line{flex:1;height:2px;margin:0 6px;margin-bottom:18px;transition:background .3s}
+    .step-line.done{background:linear-gradient(to right,#E85D26,#F59E0B)}
+    .step-line.pending{background:#E9EEF4}
+
+    /* TYPE COMPTE */
+    .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+    .type-card{padding:20px;border-radius:16px;border:2px solid var(--border);cursor:pointer;text-align:center;transition:all .2s}
+    .type-card:hover{border-color:var(--primary);background:var(--pl)}
+    .type-card.selected{border-color:var(--primary);background:var(--pl)}
+    .type-icon{font-size:36px;margin-bottom:10px}
+    .type-title{font-weight:800;font-size:15px;margin-bottom:4px}
+    .type-desc{font-size:12px;color:var(--slate);line-height:1.5}
+    .type-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);margin:10px auto 0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .type-card.selected .type-check{background:var(--primary);border-color:var(--primary);color:white;font-size:12px;font-weight:700}
+
+    /* FORMULAIRE */
+    .form-section{display:none}
+    .form-section.active{display:block}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-group{margin-bottom:16px}
+    .form-group.full{grid-column:1/-1}
+    .form-label{display:block;font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+    .input-wrap{position:relative}
+    .form-input{width:100%;padding:12px 16px 12px 44px;border-radius:11px;border:1.5px solid var(--border);font-size:14px;font-family:'Inter',sans-serif;color:var(--dark);outline:none;transition:all .15s}
+    .form-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(232,93,38,.1)}
+    .form-input.no-icon{padding-left:16px}
+    .form-input.error{border-color:#DC2626}
+    .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+    .input-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:15px;background:none;border:none;color:var(--slate)}
+    .error-msg{font-size:12px;color:#DC2626;margin-top:4px;display:none}
+    .error-msg.show{display:block}
+
+    /* FORCE MDP */
+    .pass-strength{margin-top:8px}
+    .strength-bar{height:4px;border-radius:20px;background:#E9EEF4;overflow:hidden;margin-bottom:4px}
+    .strength-fill{height:100%;border-radius:20px;transition:all .3s;width:0}
+    .strength-text{font-size:11px;font-weight:600}
+
+    /* SÉLECT SERVICES */
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+    .svc-btn{padding:8px 6px;border-radius:10px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;color:var(--slate);text-align:center;transition:all .15s}
+    .svc-btn:hover{border-color:var(--primary);color:var(--primary)}
+    .svc-btn.selected{border-color:var(--primary);background:var(--pl);color:var(--primary)}
+
+    /* UPLOAD */
+    .upload-zone{border:2px dashed var(--border);border-radius:14px;padding:24px;text-align:center;cursor:pointer;transition:all .2s}
+    .upload-zone:hover{border-color:var(--primary);background:var(--pl)}
+    .upload-icon{font-size:36px;margin-bottom:8px}
+    .upload-title{font-weight:700;font-size:14px;margin-bottom:4px}
+    .upload-sub{font-size:12px;color:var(--slate)}
+
+    /* CGU */
+    .cgu-wrap{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;cursor:pointer}
+    .cgu-wrap input{width:17px;height:17px;accent-color:var(--primary);cursor:pointer;margin-top:2px;flex-shrink:0}
+    .cgu-wrap span{font-size:13px;color:var(--slate);line-height:1.6}
+    .cgu-wrap a{color:var(--primary);font-weight:700;text-decoration:none}
+
+    /* BOUTONS */
+    .btn-nav{display:flex;gap:12px;margin-top:20px}
+    .btn-back-form{flex:1;padding:13px 0;background:#F8FAFC;color:var(--slate);border:1.5px solid var(--border);border-radius:13px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+    .btn-back-form:hover{border-color:var(--primary);color:var(--primary)}
+    .btn-next{flex:2;padding:13px 0;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:13px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(232,93,38,0.25)}
+    .btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,93,38,0.35)}
+
+    /* CONFIRMATION */
+    .confirm-wrap{text-align:center;padding:20px 0}
+    .confirm-icon{width:80px;height:80px;border-radius:24px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 20px}
+    .confirm-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#059669;margin-bottom:10px}
+    .confirm-sub{color:var(--slate);font-size:14px;line-height:1.75;margin-bottom:24px}
+    .confirm-box{background:#F8FAFC;border-radius:14px;padding:18px;text-align:left;margin-bottom:24px}
+    .confirm-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #E9EEF4;font-size:14px}
+    .confirm-row:last-child{border-bottom:none}
+    .confirm-row span:first-child{color:var(--slate)}
+    .confirm-row span:last-child{font-weight:700}
+
+    /* CONNEXION LINK */
+    .login-link{text-align:center;font-size:14px;color:var(--slate);margin-top:18px}
+    .login-link a{color:var(--primary);font-weight:700;text-decoration:none}
+
+    /* FOOTER */
+    footer{background:#0F172A;color:#94A3B8;padding:18px 40px;text-align:center;font-size:12px}
+    footer b{color:var(--primary)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;color:white;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .3s;opacity:0;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    @media(max-width:768px){
+      .main{grid-template-columns:1fr}
+      .left-panel{display:none}
+      .right-panel{padding:28px 20px}
+    }
+  </style>
+  <script src="api.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="01_accueil.html" class="logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-text"><span>Services</span><span>Plus</span></div>
+  </a>
+  <div class="nav-r">
+    <a href="10_connexion.html" class="btn-link">Déjà un compte ? Se connecter →</a>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- ══ PANNEAU GAUCHE ══ -->
+  <div class="left-panel">
+    <div class="left-content">
+      <span class="left-logo">🚀</span>
+      <h1 class="left-title">Rejoignez<br/><em>ServicesPlus</em></h1>
+      <p class="left-sub">Créez votre compte gratuit en moins de 2 minutes<br/>et accédez à des milliers de professionnels.</p>
+
+      <div class="avantages">
+        <div class="av-item">
+          <span class="av-icon">🔍</span>
+          <div>
+            <div class="av-title">Trouvez rapidement</div>
+            <div class="av-sub">Accédez à 2 400+ prestataires vérifiés près de chez vous</div>
+          </div>
+        </div>
+        <div class="av-item">
+          <span class="av-icon">🔒</span>
+          <div>
+            <div class="av-title">Paiement sécurisé</div>
+            <div class="av-sub">Transactions protégées via Orange Money, Wave ou carte bancaire</div>
+          </div>
+        </div>
+        <div class="av-item">
+          <span class="av-icon">⭐</span>
+          <div>
+            <div class="av-title">Prestataires vérifiés</div>
+            <div class="av-sub">Identité, diplômes et assurance contrôlés par notre équipe</div>
+          </div>
+        </div>
+        <div class="av-item">
+          <span class="av-icon">🛡️</span>
+          <div>
+            <div class="av-title">Garantie satisfaction</div>
+            <div class="av-sub">Remboursement garanti si vous n'êtes pas satisfait</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANNEAU DROIT ══ -->
+  <div class="right-panel">
+    <div class="form-wrap">
+
+      <div class="form-header">
+        <div class="form-icon">✨</div>
+        <h2 class="form-title">Créer un compte</h2>
+        <p class="form-sub">C'est gratuit et rapide !</p>
+      </div>
+
+      <!-- BARRE ÉTAPES -->
+      <div class="steps" id="stepsBar"></div>
+
+      <!-- ══ ÉTAPE 1 : TYPE DE COMPTE ══ -->
+      <div class="form-section active" id="sec1">
+        <div style="font-weight:700;font-size:15px;margin-bottom:16px;">Quel type de compte souhaitez-vous créer ?</div>
+
+        <div class="type-grid">
+          <div class="type-card selected" onclick="selectType('client',this)" id="typeClient">
+            <div class="type-icon">👤</div>
+            <div class="type-title">Client</div>
+            <div class="type-desc">Je cherche des prestataires pour mes besoins à domicile</div>
+            <div class="type-check">✓</div>
+          </div>
+          <div class="type-card" onclick="selectType('prestataire',this)" id="typePresta">
+            <div class="type-icon">🔧</div>
+            <div class="type-title">Prestataire</div>
+            <div class="type-desc">Je propose mes services professionnels à des clients</div>
+            <div class="type-check"></div>
+          </div>
+        </div>
+
+        <div id="typeInfo" style="background:var(--pl);border-radius:12px;padding:14px;font-size:13px;color:#7C3C00;margin-bottom:8px;">
+          👤 <strong>Compte Client :</strong> Trouvez et réservez des prestataires qualifiés en quelques clics.
+        </div>
+
+        <div class="btn-nav" style="margin-top:16px;">
+          <button class="btn-next" style="flex:1;" onclick="goStep(2)">Continuer →</button>
+        </div>
+
+        <div class="login-link">Déjà un compte ? <a href="10_connexion.html">Se connecter</a></div>
+      </div>
+
+      <!-- ══ ÉTAPE 2 : INFOS PERSONNELLES ══ -->
+      <div class="form-section" id="sec2">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Prénom *</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" class="form-input" id="prenom" placeholder="Mohammed"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom *</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" class="form-input" id="nom" placeholder="Dia"/>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Adresse email *</label>
+            <div class="input-wrap">
+              <span class="input-icon">📧</span>
+              <input type="email" class="form-input" id="email" placeholder="votre@email.com"/>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Numéro de téléphone *</label>
+            <div class="input-wrap">
+              <span class="input-icon">📞</span>
+              <input type="tel" class="form-input" id="phone" placeholder="+221 77 000 00 00"/>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Ville *</label>
+            <div class="input-wrap">
+              <span class="input-icon">📍</span>
+              <select class="form-input" id="ville">
+                <option value="">Sélectionnez votre ville</option>
+                <option>Dakar</option><option>Thiès</option><option>Saint-Louis</option>
+                <option>Ziguinchor</option><option>Kaolack</option><option>Rufisque</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Mot de passe *</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" class="form-input" id="password" placeholder="Minimum 8 caractères" oninput="checkStrength(this.value)"/>
+              <button class="input-toggle" onclick="togglePass('password',this)">👁️</button>
+            </div>
+            <div class="pass-strength">
+              <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+              <span class="strength-text" id="strengthText"></span>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Confirmer le mot de passe *</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" class="form-input" id="password2" placeholder="Retapez votre mot de passe"/>
+              <button class="input-toggle" onclick="togglePass('password2',this)">👁️</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-nav">
+          <button class="btn-back-form" onclick="goStep(1)">← Retour</button>
+          <button class="btn-next" onclick="goStep(typeActif==='prestataire'?3:4)">Continuer →</button>
+        </div>
+      </div>
+
+      <!-- ══ ÉTAPE 3 : INFOS PRESTATAIRE (si prestataire) ══ -->
+      <div class="form-section" id="sec3">
+        <div style="font-weight:800;font-size:15px;margin-bottom:16px;">🔧 Informations professionnelles</div>
+
+        <div class="form-group">
+          <label class="form-label">Sélectionnez votre service principal *</label>
+          <div class="services-grid" id="servicesGrid"></div>
+        </div>
+
+        <div class="form-grid" style="margin-top:4px;">
+          <div class="form-group">
+            <label class="form-label">Tarif horaire (MAD) *</label>
+            <div class="input-wrap">
+              <span class="input-icon">💰</span>
+              <input type="number" class="form-input" id="tarif" placeholder="Ex: 150"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Années d'expérience *</label>
+            <div class="input-wrap">
+              <span class="input-icon">📅</span>
+              <select class="form-input" id="experience">
+                <option>Moins de 1 an</option>
+                <option>1 à 3 ans</option>
+                <option selected>3 à 5 ans</option>
+                <option>5 à 10 ans</option>
+                <option>Plus de 10 ans</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Zone d'intervention *</label>
+            <div class="input-wrap">
+              <span class="input-icon">📍</span>
+              <input type="text" class="form-input" id="zone" placeholder="Ex: Dakar, Pikine, Guédiawaye (rayon 25 km)"/>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Description de vos services</label>
+            <textarea class="form-input no-icon" id="description" rows="3" style="padding:12px 16px;resize:none;" placeholder="Décrivez vos compétences et spécialités..."></textarea>
+          </div>
+        </div>
+
+        <!-- UPLOAD DOCUMENTS -->
+        <div style="font-weight:800;font-size:14px;margin:16px 0 12px;">📄 Documents requis</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+          <div class="upload-zone" onclick="T('📁 Sélection de fichier...')">
+            <div class="upload-icon">🪪</div>
+            <div class="upload-title">Pièce d'identité</div>
+            <div class="upload-sub">CNI ou Passeport</div>
+          </div>
+          <div class="upload-zone" onclick="T('📁 Sélection de fichier...')">
+            <div class="upload-icon">🎓</div>
+            <div class="upload-title">Diplôme/Certificat</div>
+            <div class="upload-sub">Justificatif de compétence</div>
+          </div>
+          <div class="upload-zone" onclick="T('📁 Sélection de fichier...')">
+            <div class="upload-icon">🛡️</div>
+            <div class="upload-title">Assurance RC</div>
+            <div class="upload-sub">Responsabilité civile</div>
+          </div>
+          <div class="upload-zone" onclick="T('📁 Sélection de fichier...')">
+            <div class="upload-icon">📸</div>
+            <div class="upload-title">Photo de profil</div>
+            <div class="upload-sub">Photo professionnelle</div>
+          </div>
+        </div>
+
+        <div style="background:#FFF0EB;border-radius:12px;padding:12px 16px;font-size:12px;color:#7C3C00;margin-bottom:8px;">
+          ℹ️ Votre dossier sera examiné par notre équipe sous <strong>48h ouvrées</strong>. Vous recevrez une notification par email.
+        </div>
+
+        <div class="btn-nav">
+          <button class="btn-back-form" onclick="goStep(2)">← Retour</button>
+          <button class="btn-next" onclick="soumettre()">🚀 Créer mon compte →</button>
+        </div>
+      </div>
+
+      <!-- ══ ÉTAPE 4 : CONFIRMATION ══ -->
+      <div class="form-section" id="sec4">
+        <div class="confirm-wrap">
+          <div class="confirm-icon">🎉</div>
+          <div class="confirm-title">Compte créé avec succès !</div>
+          <div class="confirm-sub">
+            Bienvenue sur <strong>ServicesPlus</strong> !<br/>
+            Un email de confirmation a été envoyé à votre adresse.
+          </div>
+
+          <div class="confirm-box" id="confirmBox"></div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+            <button onclick="location.href='10_connexion.html'" style="padding:13px 0;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px;">
+              Se connecter →
+            </button>
+            <button onclick="location.href='01_accueil.html'" style="padding:13px 0;background:#F8FAFC;color:var(--slate);border:1.5px solid var(--border);border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;">
+              Accueil
+            </button>
+          </div>
+
+          <div id="prestaNote" style="display:none;background:#FFF0EB;border-radius:12px;padding:14px 16px;font-size:13px;color:#7C3C00;text-align:left;">
+            🔧 <strong>Prestataire :</strong> Votre dossier est en cours de validation. Notre équipe vous contactera sous 48h pour confirmer votre inscription.
+          </div>
+        </div>
+      </div>
+
+      <!-- CGU -->
+      <div id="cguWrap" style="display:none;">
+        <label class="cgu-wrap">
+          <input type="checkbox" id="cguCheck"/>
+          <span>J'accepte les <a href="#">Conditions d'utilisation</a> et la <a href="#">Politique de confidentialité</a> de ServicesPlus</span>
+        </label>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 <b>ServicesPlus</b>. Tous droits réservés. — Fait par le <b>Groupe 18 — UNCHK</b></span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ════ CONFIG ════ */
+  const STEPS = {
+    client:       [{n:1,lbl:"Type"},{n:2,lbl:"Infos"},{n:3,lbl:"Confirmation"}],
+    prestataire:  [{n:1,lbl:"Type"},{n:2,lbl:"Infos"},{n:3,lbl:"Services"},{n:4,lbl:"Confirmation"}],
+  };
+
+  const STEP_MAP = {
+    client:      {1:1, 2:2, 4:3},
+    prestataire: {1:1, 2:2, 3:3, 4:4},
+  };
+
+  const SERVICES_LIST = [
+    {icon:"🔧",nom:"Plomberie"},{icon:"⚡",nom:"Électricité"},{icon:"🧹",nom:"Ménage"},
+    {icon:"🎨",nom:"Peinture"},{icon:"🌿",nom:"Jardinage"},{icon:"❄️",nom:"Climatisation"},
+    {icon:"🚪",nom:"Serrurerie"},{icon:"🏗️",nom:"Maçonnerie"},{icon:"🛁",nom:"Salle de bain"},
+  ];
+
+  let typeActif = 'client';
+  let currentStep = 1;
+  let serviceSelectionne = '';
+
+  /* ════ INIT ════ */
+  window.onload = () => {
+    renderSteps();
+    renderServices();
+  };
+
+  /* ════ ÉTAPES ════ */
+  function renderSteps() {
+    const steps = STEPS[typeActif];
+    const bar = document.getElementById('stepsBar');
+    bar.innerHTML = steps.map((s, i) => {
+      const realStep = Object.keys(STEP_MAP[typeActif]).find(k => STEP_MAP[typeActif][k] === s.n);
+      const isActive = currentStep == realStep;
+      const isDone   = currentStep > realStep;
+      const state    = isDone ? 'done' : isActive ? 'active' : 'pending';
+      return `
+        <div class="step-item">
+          <div class="step-circle ${state}">${state==='done'?'✓':s.n}</div>
+          <span class="step-label ${state}">${s.lbl}</span>
+        </div>
+        ${i < steps.length-1 ? `<div class="step-line ${isDone?'done':'pending'}"></div>` : ''}
+      `;
+    }).join('');
+  }
+
+  function goStep(n) {
+    if (n === 4) fillConfirm();
+    currentStep = n;
+    renderSteps();
+    [1,2,3,4].forEach(i => {
+      document.getElementById('sec'+i).classList.toggle('active', i===n);
+    });
+    document.getElementById('cguWrap').style.display = n===3||n===2 ? 'block' : 'none';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  /* ════ TYPE DE COMPTE ════ */
+  function selectType(type, el) {
+    typeActif = type;
+    document.querySelectorAll('.type-card').forEach(c => {
+      c.classList.remove('selected');
+      c.querySelector('.type-check').textContent = '';
+    });
+    el.classList.add('selected');
+    el.querySelector('.type-check').textContent = '✓';
+
+    const info = {
+      client:      '👤 <strong>Compte Client :</strong> Trouvez et réservez des prestataires qualifiés en quelques clics.',
+      prestataire: '🔧 <strong>Compte Prestataire :</strong> Proposez vos services et développez votre activité sur ServicesPlus.',
+    };
+    document.getElementById('typeInfo').innerHTML = info[type];
+    renderSteps();
+  }
+
+  /* ════ SERVICES PRESTATAIRE ════ */
+  function renderServices() {
+    document.getElementById('servicesGrid').innerHTML = SERVICES_LIST.map(s => `
+      <div class="svc-btn" onclick="selectService('${s.nom}',this)">
+        <div style="font-size:20px;margin-bottom:4px;">${s.icon}</div>
+        <div>${s.nom}</div>
+      </div>
+    `).join('');
+  }
+
+  function selectService(nom, el) {
+    document.querySelectorAll('.svc-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    serviceSelectionne = nom;
+  }
+
+  /* ════ MOT DE PASSE ════ */
+  function togglePass(id, btn) {
+    const input = document.getElementById(id);
+    const visible = input.type === 'text';
+    input.type = visible ? 'password' : 'text';
+    btn.textContent = visible ? '👁️' : '🙈';
+  }
+
+  function checkStrength(val) {
+    const fill = document.getElementById('strengthFill');
+    const text = document.getElementById('strengthText');
+    let score = 0;
+    if (val.length >= 8)  score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      {pct:0,  color:'#E9EEF4', txt:''},
+      {pct:25, color:'#DC2626', txt:'Faible'},
+      {pct:50, color:'#D97706', txt:'Moyen'},
+      {pct:75, color:'#2563EB', txt:'Bon'},
+      {pct:100,color:'#059669', txt:'Excellent'},
+    ];
+    const lvl = levels[score] || levels[0];
+    fill.style.width   = lvl.pct + '%';
+    fill.style.background = lvl.color;
+    text.textContent = lvl.txt;
+    text.style.color = lvl.color;
+  }
+
+  /* ════ CONFIRMATION ════ */
+  function fillConfirm() {
+    const prenom = document.getElementById('prenom')?.value || 'Mohammed';
+    const nom    = document.getElementById('nom')?.value    || 'Dia';
+    const email  = document.getElementById('email')?.value  || 'email@example.com';
+    const ville  = document.getElementById('ville')?.value  || 'Dakar';
+
+    const rows = [
+      ['Nom complet', prenom + ' ' + nom],
+      ['Email',       email],
+      ['Ville',       ville || 'Non renseignée'],
+      ['Type de compte', typeActif === 'prestataire' ? '🔧 Prestataire' : '👤 Client'],
+      typeActif === 'prestataire' ? ['Service', serviceSelectionne || 'Non sélectionné'] : null,
+      typeActif === 'prestataire' ? ['Tarif', (document.getElementById('tarif')?.value || '—') + ' MAD/h'] : null,
+    ].filter(Boolean);
+
+    document.getElementById('confirmBox').innerHTML = rows.map(([k,v]) => `
+      <div class="confirm-row"><span>${k}</span><span>${v}</span></div>
+    `).join('');
+
+    document.getElementById('prestaNote').style.display = typeActif === 'prestataire' ? 'block' : 'none';
+  }
+
+  /* ════ SOUMISSION INSCRIPTION ════ */
+  async function soumettre() {
+    const nom      = document.getElementById('nom')?.value?.trim()      || '';
+    const prenom   = document.getElementById('prenom')?.value?.trim()   || '';
+    const email    = document.getElementById('email')?.value?.trim()    || '';
+    const password = document.getElementById('password')?.value         || '';
+    const password2= document.getElementById('password2')?.value        || '';
+    const telephone= document.getElementById('telephone')?.value?.trim()|| '';
+    const ville    = document.getElementById('ville')?.value?.trim()    || '';
+
+    if (!nom || !prenom || !email || !password) {
+      T('⚠️ Veuillez remplir tous les champs obligatoires.'); return;
+    }
+    if (!email.includes('@')) {
+      T('⚠️ Email invalide.'); return;
+    }
+    if (password.length < 6) {
+      T('⚠️ Mot de passe trop court (6 caractères min).'); return;
+    }
+    if (password !== password2) {
+      T('⚠️ Les mots de passe ne correspondent pas.'); return;
+    }
+    if (!document.getElementById('cguCheck')?.checked) {
+      T('⚠️ Veuillez accepter les CGU.'); return;
+    }
+
+    const body = { nom, prenom, email, password, telephone, ville, role: typeActif };
+
+    if (typeActif === 'prestataire') {
+      if (!serviceSelectionne) { T('⚠️ Sélectionnez un service.'); return; }
+      // Map service nom → categorie_id (correspond aux IDs insérés dans la BD)
+      const catMap = {
+        'Plomberie':1,'Électricité':2,'Ménage':3,'Jardinage':4,
+        'Peinture':5,'Menuiserie':6,'Climatisation':7,'Serrurerie':8,
+        'Maçonnerie':8,'Salle de bain':1,
+      };
+      body.categorie_id  = catMap[serviceSelectionne] || 1;
+      body.tarif_horaire = parseFloat(document.getElementById('tarif')?.value || 0);
+      body.bio           = document.getElementById('bio')?.value?.trim() || '';
+      body.experience    = document.getElementById('experience')?.value  || '1 à 3 ans';
+    }
+
+    const btn = document.querySelector('button[onclick="soumettre()"]');
+    if (btn) { btn.textContent = '⏳ Inscription...'; btn.disabled = true; }
+
+    const data = await apiFetch('auth.php?action=register', 'POST', body);
+
+    if (btn) { btn.textContent = '🚀 Créer mon compte →'; btn.disabled = false; }
+
+    if (data.success) {
+      T('✅ ' + data.message);
+      fillConfirm();
+      // Afficher section succès
+      setTimeout(() => { location.href = '10_connexion.html'; }, 2500);
+    } else {
+      T('❌ ' + data.message);
+    }
+  }
+
+  /* ════ TOAST ════ */
+  function T(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>

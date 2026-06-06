@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ServicesPlus – Dashboard Prestataire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --primary:#E85D26; --primary-light:#FFF0EB; --gold:#F59E0B;
+      --dark:#0F172A; --slate:#64748B; --border:#E9EEF4;
+      --bg:#F6F8FB; --green:#059669; --blue:#2563EB;
+    }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--dark); }
+
+    /* ── NAV ── */
+    nav { position:sticky;top:0;z-index:999;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:66px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 6px rgba(0,0,0,0.06); }
+    .logo { display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:24px; }
+    .logo-icon { width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:19px; }
+    .logo-text { font-family:'Playfair Display',serif;font-size:20px;font-weight:900; }
+    .logo-text span:first-child { color:var(--primary); }
+    .logo-text span:last-child  { color:var(--dark); }
+    .nav-links { display:flex;gap:4px;flex:1; }
+    .nav-link { padding:7px 14px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;background:transparent;color:var(--slate);text-decoration:none;display:inline-flex;align-items:center;transition:all 0.15s; }
+    .nav-link:hover,.nav-link.active { background:var(--primary-light);color:var(--primary); }
+    .nav-actions { display:flex;align-items:center;gap:10px;padding-left:16px;border-left:1px solid var(--border); }
+    .notif-btn { width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:16px;position:relative;display:flex;align-items:center;justify-content:center; }
+    .notif-dot { position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--primary); }
+    .avatar-btn { display:flex;align-items:center;gap:9px;cursor:pointer;padding:6px 14px;border-radius:12px;border:1.5px solid var(--border);background:white;transition:all 0.15s; }
+    .avatar-btn:hover { border-color:var(--primary); }
+    .avatar-circle { width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1A3560);display:flex;align-items:center;justify-content:center;font-size:15px; }
+
+    /* ── LAYOUT ── */
+    .container { max-width:1180px;margin:0 auto;padding:28px 20px; }
+    .dash-layout { display:grid;grid-template-columns:240px 1fr;gap:22px;align-items:start; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { background:white;border-radius:20px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,0.05);overflow:hidden;position:sticky;top:86px; }
+    .sidebar-user { padding:24px;background:linear-gradient(135deg,#1A3560,#2563EB);text-align:center; }
+    .sidebar-avatar { width:72px;height:72px;border-radius:22px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px;border:3px solid rgba(255,255,255,0.3); }
+    .sidebar-name { color:white;font-weight:800;font-size:16px;margin-bottom:3px; }
+    .sidebar-role { color:rgba(255,255,255,0.7);font-size:12px;margin-bottom:10px; }
+    .dispo-toggle { display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,0.12);border-radius:12px;padding:8px 14px;cursor:pointer;transition:all 0.2s; }
+    .dispo-toggle:hover { background:rgba(255,255,255,0.2); }
+    .toggle-dot { width:10px;height:10px;border-radius:50%;background:#4ADE80; }
+    .toggle-label { color:white;font-size:12px;font-weight:700; }
+    .sidebar-menu { padding:12px; }
+    .menu-item { display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--slate);transition:all 0.15s;text-decoration:none;margin-bottom:3px; }
+    .menu-item:hover,.menu-item.active { background:var(--primary-light);color:var(--primary); }
+    .menu-item .icon { font-size:17px;width:22px;text-align:center; }
+    .menu-sep { height:1px;background:var(--border);margin:10px 12px; }
+    .menu-item.danger { color:#DC2626; }
+    .menu-item.danger:hover { background:#FEF2F2; }
+
+    /* ── CARD ── */
+    .card { background:white;border-radius:18px;padding:22px;border:1.5px solid var(--border);box-shadow:0 2px 6px rgba(15,23,42,0.04); }
+    .card-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:18px; }
+    .card-title { font-weight:800;font-size:16px; }
+
+    /* ── STATS ── */
+    .stats-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px; }
+    .stat-card { background:white;border-radius:16px;padding:20px;border:1.5px solid var(--border);box-shadow:0 2px 6px rgba(15,23,42,0.04);position:relative;overflow:hidden; }
+    .stat-card::before { content:'';position:absolute;top:0;left:0;right:0;height:3px; }
+    .stat-card.blue::before   { background:#2563EB; }
+    .stat-card.orange::before { background:#E85D26; }
+    .stat-card.gold::before   { background:#F59E0B; }
+    .stat-card.green::before  { background:#059669; }
+    .stat-card.purple::before { background:#7C3AED; }
+    .stat-top { display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px; }
+    .stat-icon { font-size:26px; }
+    .stat-trend { font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px; }
+    .trend-up  { color:#059669;background:#ECFDF5; }
+    .trend-neu { color:#64748B;background:#F1F5F9; }
+    .stat-value { font-size:26px;font-weight:900;margin-bottom:3px; }
+    .stat-label { font-size:12px;color:var(--slate); }
+    .stat-sub { font-size:11px;color:#94A3B8;margin-top:2px; }
+
+    /* ── DEMANDES ── */
+    .demande-card { border:1.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;transition:all 0.2s; }
+    .demande-card:hover { border-color:var(--primary);box-shadow:0 4px 16px rgba(232,93,38,0.08); }
+    .demande-header { display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px; }
+    .demande-client { font-weight:800;font-size:15px; }
+    .demande-urgence { font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#FEF2F2;color:#DC2626; }
+    .demande-info { display:flex;gap:16px;font-size:13px;color:var(--slate);margin-bottom:12px; }
+    .demande-info span { display:flex;align-items:center;gap:4px; }
+    .demande-desc { font-size:13px;color:#475569;background:#F8FAFC;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-style:italic; }
+    .demande-actions { display:flex;gap:8px; }
+    .btn-accept { flex:1;padding:10px 0;background:linear-gradient(135deg,#059669,#34D399);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif; }
+    .btn-reject { padding:10px 16px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif; }
+    .btn-detail { padding:10px 16px;background:#F8FAFC;color:var(--slate);border:1.5px solid var(--border);border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif; }
+
+    /* ── PLANNING ── */
+    .planning-day { display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #F8FAFC; }
+    .planning-day:last-child { border-bottom:none; }
+    .planning-time { font-size:12px;font-weight:700;color:#94A3B8;width:42px;flex-shrink:0;padding-top:2px; }
+    .planning-bar  { width:3px;border-radius:3px;flex-shrink:0; }
+    .planning-info { flex:1; }
+    .planning-title { font-weight:700;font-size:14px;margin-bottom:2px; }
+    .planning-client { font-size:12px;color:var(--slate); }
+    .planning-badge { font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:auto;align-self:flex-start;flex-shrink:0; }
+
+    /* ── TABLE MISSIONS ── */
+    table { width:100%;border-collapse:collapse;font-size:13px; }
+    th { text-align:left;padding:10px 12px;color:#94A3B8;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #F1F5F9; }
+    td { padding:13px 12px;border-bottom:1px solid #F8FAFC;vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#FAFBFC; }
+    .badge { padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap; }
+    .badge-blue   { color:#2563EB;background:#EFF6FF; }
+    .badge-green  { color:#059669;background:#ECFDF5; }
+    .badge-orange { color:#D97706;background:#FFFBEB; }
+    .badge-gray   { color:#64748B;background:#F1F5F9; }
+    .btn-sm { padding:5px 11px;border-radius:8px;border:none;cursor:pointer;font-size:11px;font-weight:700;font-family:'Inter',sans-serif; }
+    .btn-sm.orange { background:var(--primary-light);color:var(--primary); }
+    .btn-sm.green  { background:#ECFDF5;color:#059669; }
+
+    /* ── REVENUS CHART ── */
+    .chart-wrap { display:flex;align-items:flex-end;gap:8px;height:110px; }
+    .bar-col  { flex:1;display:flex;flex-direction:column;align-items:center;gap:4px; }
+    .bar-fill { width:100%;border-radius:6px 6px 0 0;transition:height 0.4s; }
+    .bar-lbl  { font-size:10px;color:#94A3B8;font-weight:600; }
+    .bar-val  { font-size:10px;color:var(--slate);font-weight:700; }
+
+    /* ── AVIS CLIENTS ── */
+    .avis-mini { display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #F8FAFC; }
+    .avis-mini:last-child { border-bottom:none; }
+    .avis-av { width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex-shrink:0; }
+    .avis-name { font-weight:700;font-size:13px; }
+    .avis-date { font-size:11px;color:#94A3B8; }
+    .avis-text { font-size:13px;color:#475569;font-style:italic;margin-top:4px; }
+
+    /* ── PERFORMANCE ── */
+    .perf-row { display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #F8FAFC; }
+    .perf-row:last-child { border-bottom:none; }
+    .perf-label { font-size:13px;font-weight:600; }
+    .perf-bar-wrap { flex:1;margin:0 16px;height:8px;background:#F1F5F9;border-radius:20px;overflow:hidden; }
+    .perf-bar { height:100%;border-radius:20px;background:linear-gradient(135deg,#E85D26,#F59E0B); }
+    .perf-val { font-size:13px;font-weight:800;color:var(--primary);width:40px;text-align:right; }
+
+    /* ── 2 COL ── */
+    .two-col   { display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px; }
+    .three-col { display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px; }
+
+    /* ── BOUTONS ── */
+    .btn-primary { padding:10px 20px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:11px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:opacity 0.15s; }
+    .btn-primary:hover { opacity:0.88; }
+    .btn-outline { padding:9px 18px;background:transparent;color:var(--slate);border:1.5px solid var(--border);border-radius:11px;font-weight:600;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all 0.15s; }
+    .btn-outline:hover { border-color:var(--primary);color:var(--primary); }
+
+    /* ── FOOTER ── */
+    footer { background:#0F172A;color:#94A3B8;padding:28px 40px 18px;margin-top:48px; }
+    .footer-bottom { max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;font-size:12px;padding-top:14px;border-top:1px solid #1E293B; }
+    .footer-bottom b { color:var(--primary); }
+
+    /* ── TOAST ── */
+    .toast { position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;color:white;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:all 0.3s;opacity:0;pointer-events:none; }
+    .toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
+  </style>
+  <script src="api.js"></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="01_accueil.html" class="logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-text"><span>Services</span><span>Plus</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="01_accueil.html"              class="nav-link">Accueil</a>
+    <a href="02_recherche.html"            class="nav-link">Recherche</a>
+    <a href="03_profil_prestataire.html"   class="nav-link">Mon profil public</a>
+    <a href="06_dashboard_prestataire.html" class="nav-link active">Dashboard</a>
+    <a href="12_faq.html"                  class="nav-link">FAQ</a>
+    <a href="13_contact.html"              class="nav-link">Contact</a>
+  </div>
+  <div class="nav-actions">
+    <button class="notif-btn" onclick="location.href='10_notifications.html'">
+      🔔<div class="notif-dot"></div>
+    </button>
+    <div class="avatar-btn" onclick="location.href='11_mon_profil.html'">
+      <div class="avatar-circle">🧑‍🔧</div>
+      <span style="font-size:13px;font-weight:700;">Karim B.</span>
+    </div>
+    <button class="btn-outline" style="font-size:12px;padding:7px 14px;" onclick="location.href='10_connexion.html'">Déconnexion</button>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="dash-layout">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">🧑‍🔧</div>
+        <div class="sidebar-name">Karim Benali</div>
+        <div class="sidebar-role">Plombier • Dakar</div>
+        <div class="dispo-toggle" onclick="toggleDispo(this)">
+          <div class="toggle-dot" id="dispoDot"></div>
+          <span class="toggle-label" id="dispoLabel">Disponible</span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <a class="menu-item active" href="#"><span class="icon">📊</span> Vue d'ensemble</a>
+        <a class="menu-item" href="#" onclick="scrollTo('sec-demandes')"><span class="icon">📩</span> Demandes <span style="margin-left:auto;background:var(--primary);color:white;font-size:10px;padding:2px 7px;border-radius:20px;">2</span></a>
+        <a class="menu-item" href="#" onclick="scrollTo('sec-planning')"><span class="icon">🗓️</span> Planning</a>
+        <a class="menu-item" href="#" onclick="scrollTo('sec-missions')"><span class="icon">📋</span> Missions</a>
+        <a class="menu-item" href="#" onclick="scrollTo('sec-revenus')"><span class="icon">💰</span> Revenus</a>
+        <a class="menu-item" href="#" onclick="scrollTo('sec-avis')"><span class="icon">⭐</span> Mes avis</a>
+        <div class="menu-sep"></div>
+        <a class="menu-item" href="03_profil_prestataire.html"><span class="icon">👤</span> Mon profil public</a>
+        <a class="menu-item" href="11_mon_profil.html"><span class="icon">⚙️</span> Paramètres</a>
+        <a class="menu-item" href="10_notifications.html"><span class="icon">🔔</span> Notifications</a>
+        <div class="menu-sep"></div>
+        <a class="menu-item danger" href="10_connexion.html"><span class="icon">🚪</span> Déconnexion</a>
+      </div>
+    </aside>
+
+    <!-- ═══ CONTENU ═══ -->
+    <main>
+
+      <!-- En-tête -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+        <div>
+          <h1 style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;margin-bottom:4px;">🔧 Espace prestataire</h1>
+          <p style="color:var(--slate);font-size:14px;">Bienvenue Karim — Voici votre tableau de bord du jour</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-outline" onclick="location.href='03_profil_prestataire.html'">👁️ Voir mon profil</button>
+          <button class="btn-primary" onclick="exportData()">📊 Exporter</button>
+        </div>
+      </div>
+
+      <!-- ═══ STATS ═══ -->
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-top"><span class="stat-icon">📅</span><span class="stat-trend trend-up">+2 vs semaine</span></div>
+          <div class="stat-value">8</div>
+          <div class="stat-label">Missions ce mois</div>
+          <div class="stat-sub">3 en cours • 5 terminées</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-top"><span class="stat-icon">⭐</span><span class="stat-trend trend-up">+0.1</span></div>
+          <div class="stat-value">4.9</div>
+          <div class="stat-label">Note globale</div>
+          <div class="stat-sub">Sur 127 avis clients</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-top"><span class="stat-icon">💰</span><span class="stat-trend trend-up">+450 MAD</span></div>
+          <div class="stat-value">3 200</div>
+          <div class="stat-label">Revenus ce mois (MAD)</div>
+          <div class="stat-sub">Objectif : 4 000 MAD</div>
+        </div>
+        <div class="stat-card purple" style="--purple:#7C3AED;">
+          <div class="stat-top"><span class="stat-icon">✅</span><span class="stat-trend trend-up">Excellent</span></div>
+          <div class="stat-value">98%</div>
+          <div class="stat-label">Taux d'acceptation</div>
+          <div class="stat-sub">2 refus ce mois</div>
+        </div>
+      </div>
+
+      <!-- ═══ DEMANDES + PLANNING ═══ -->
+      <div class="two-col" id="sec-demandes">
+
+        <!-- Demandes entrantes -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📩 Demandes en attente</span>
+            <span style="background:#FEF2F2;color:#DC2626;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">2 nouvelles</span>
+          </div>
+          <div id="demandesList"></div>
+        </div>
+
+        <!-- Planning -->
+        <div class="card" id="sec-planning">
+          <div class="card-header">
+            <span class="card-title">🗓️ Planning d'aujourd'hui</span>
+            <span style="font-size:12px;color:var(--slate);" id="todayDate"></span>
+          </div>
+          <div id="planningList"></div>
+        </div>
+      </div>
+
+      <!-- ═══ PERFORMANCE ═══ -->
+      <div class="three-col">
+        <div class="card" style="grid-column:1/3;">
+          <div class="card-header">
+            <span class="card-title">📈 Revenus mensuels (MAD)</span>
+            <div style="display:flex;gap:8px;">
+              <button class="btn-outline" style="font-size:12px;padding:6px 12px;" onclick="setPeriode('6m',this)">6 mois</button>
+              <button class="btn-primary" style="font-size:12px;padding:6px 12px;" onclick="setPeriode('12m',this)">12 mois</button>
+            </div>
+          </div>
+          <div class="chart-wrap" id="chartWrap"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid #F1F5F9;">
+            <div style="text-align:center;"><div style="font-size:20px;font-weight:900;color:var(--primary);">3 200 MAD</div><div style="font-size:11px;color:var(--slate);">Ce mois</div></div>
+            <div style="text-align:center;"><div style="font-size:20px;font-weight:900;color:#059669;">28 400 MAD</div><div style="font-size:11px;color:var(--slate);">Cette année</div></div>
+            <div style="text-align:center;"><div style="font-size:20px;font-weight:900;color:#2563EB;">2 367 MAD</div><div style="font-size:11px;color:var(--slate);">Moyenne/mois</div></div>
+          </div>
+        </div>
+
+        <!-- Performance -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px;">🏆 Performance</div>
+          <div id="perfList"></div>
+        </div>
+      </div>
+
+      <!-- ═══ MISSIONS ═══ -->
+      <div class="card" style="margin-bottom:20px;" id="sec-missions">
+        <div class="card-header">
+          <span class="card-title">📋 Historique des missions</span>
+          <div style="display:flex;gap:8px;">
+            <select onchange="filterMissions(this.value)" style="padding:7px 12px;border-radius:9px;border:1.5px solid var(--border);font-size:12px;font-family:'Inter',sans-serif;outline:none;">
+              <option value="tous">Toutes</option>
+              <option value="termine">Terminées</option>
+              <option value="en-cours">En cours</option>
+              <option value="annule">Annulées</option>
+            </select>
+            <button class="btn-primary" style="font-size:12px;padding:7px 14px;" onclick="exportData()">📊 Export CSV</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Client</th><th>Service</th><th>Date</th><th>Durée</th><th>Montant</th><th>Note</th><th>Statut</th><th>Action</th></tr>
+          </thead>
+          <tbody id="missionsTable"></tbody>
+        </table>
+      </div>
+
+      <!-- ═══ AVIS ═══ -->
+      <div class="two-col" id="sec-avis">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">⭐ Derniers avis reçus</span>
+            <a href="03_profil_prestataire.html" style="font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;">Voir tous →</a>
+          </div>
+          <div id="avisRecents"></div>
+        </div>
+
+        <!-- Statistiques avis -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px;">📊 Répartition des notes</div>
+          <div style="text-align:center;margin-bottom:18px;">
+            <div style="font-size:52px;font-weight:900;line-height:1;">4.9</div>
+            <div style="color:#F59E0B;font-size:24px;">★★★★★</div>
+            <div style="font-size:13px;color:var(--slate);margin-top:4px;">Basé sur 127 avis</div>
+          </div>
+          <div id="notesRepartition"></div>
+          <div style="margin-top:18px;padding:14px;background:#FFF0EB;border-radius:12px;">
+            <div style="font-weight:700;font-size:14px;margin-bottom:4px;">💡 Conseil ServicesPlus</div>
+            <div style="font-size:12px;color:#7C3C00;line-height:1.6;">Répondez aux avis clients pour augmenter votre visibilité. Les prestataires qui répondent reçoivent 40% de réservations en plus.</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2025 <b>ServicesPlus</b>. Tous droits réservés.</span>
+    <span>Fait avec ❤️ par le <b>Groupe 18 — UNCHK</b></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══ DONNÉES ═══ */
+const DEMANDES = [
+  { client:"Mohammed Dia",  service:"Plomberie",   date:"Dem. 10:00", duree:"2h", montant:"300 MAD", adresse:"12 Rue Félix Faure, Dakar", desc:"Fuite sous l'évier de la cuisine, urgent.", urgence:true  },
+  { client:"Nadia Amrani",  service:"Plomberie",   date:"Ven. 14:00", duree:"3h", montant:"450 MAD", adresse:"45 Av. Bourguiba, Dakar",   desc:"Installation d'une nouvelle douche.",      urgence:false },
+];
+
+const PLANNING = [
+  { time:"08:00", title:"Inspection chauffe-eau", client:"Youssef A.", color:"#2563EB", bg:"#EFF6FF", statut:"Terminé"   },
+  { time:"10:30", title:"Remplacement robinet",   client:"Leila B.",   color:"#E85D26", bg:"#FFF0EB", statut:"En cours"  },
+  { time:"14:00", title:"Réparation fuite",       client:"Mohammed T.",color:"#059669", bg:"#ECFDF5", statut:"À venir"   },
+  { time:"17:00", title:"Pose sanitaires",        client:"Sara C.",    color:"#7C3AED", bg:"#F5F3FF", statut:"À venir"   },
+];
+
+const MISSIONS = [
+  { client:"Mohammed T.", service:"Plomberie",  date:"Auj. 14:00",   duree:"3h", montant:"450 MAD", note:5,   statut:"en-cours" },
+  { client:"Leila B.",    service:"Plomberie",  date:"Auj. 10:30",   duree:"2h", montant:"300 MAD", note:null,statut:"en-cours" },
+  { client:"Nadia C.",    service:"Plomberie",  date:"Hier 09:00",   duree:"4h", montant:"600 MAD", note:5,   statut:"termine"  },
+  { client:"Youssef A.",  service:"Plomberie",  date:"22/12 14:00",  duree:"2h", montant:"300 MAD", note:4,   statut:"termine"  },
+  { client:"Fatou S.",    service:"Plomberie",  date:"20/12 08:00",  duree:"5h", montant:"750 MAD", note:5,   statut:"termine"  },
+  { client:"Omar D.",     service:"Plomberie",  date:"15/12 11:00",  duree:"1h", montant:"150 MAD", note:5,   statut:"termine"  },
+];
+
+const AVIS = [
+  { init:"M", nom:"Mohammed T.", date:"Il y a 2j",  note:5, texte:"Karim est arrivé à l'heure, travail impeccable !"       },
+  { init:"N", nom:"Nadia C.",    date:"Il y a 5j",  note:5, texte:"Très professionnel, je recommande vivement."             },
+  { init:"Y", nom:"Youssef A.",  date:"Il y a 1sem",note:4, texte:"Bon travail, légèrement en retard mais très compétent."  },
+];
+
+const PERF = [
+  { label:"Satisfaction client", val:98, str:"98%" },
+  { label:"Taux d'acceptation",  val:96, str:"96%" },
+  { label:"Ponctualité",         val:92, str:"92%" },
+  { label:"Qualité du travail",  val:99, str:"99%" },
+  { label:"Communication",       val:95, str:"95%" },
+];
+
+const MOIS_6  = ["Août","Sept","Oct","Nov","Déc","Jan"];
+const VALS_6  = [1800, 2400, 2100, 2800, 3000, 3200];
+const MOIS_12 = ["Fév","Mar","Avr","Mai","Jun","Jul","Août","Sep","Oct","Nov","Déc","Jan"];
+const VALS_12 = [1200,1600,1900,2100,2400,2000,1800,2400,2100,2800,3000,3200];
+
+let dispoActif = true;
+
+/* ═══ INIT ═══ */
+window.onload = () => {
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  renderDemandes();
+  renderPlanning();
+  renderChart(MOIS_6, VALS_6);
+  renderPerf();
+  renderMissions(MISSIONS);
+  renderAvis();
+  renderNotes();
+};
+
+/* ═══ DEMANDES ═══ */
+function renderDemandes() {
+  document.getElementById('demandesList').innerHTML = DEMANDES.map((d,i) => `
+    <div class="demande-card" id="dem-${i}">
+      <div class="demande-header">
+        <div>
+          <div class="demande-client">${d.client}</div>
+          <div style="font-size:12px;color:var(--slate);margin-top:2px;">${d.adresse}</div>
+        </div>
+        ${d.urgence ? '<span class="demande-urgence">🚨 Urgent</span>' : '<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#ECFDF5;color:#059669;">Planifié</span>'}
+      </div>
+      <div class="demande-info">
+        <span>🔧 ${d.service}</span>
+        <span>📅 ${d.date}</span>
+        <span>⏱️ ${d.duree}</span>
+        <span style="font-weight:800;color:var(--primary);">💰 ${d.montant}</span>
+      </div>
+      <div class="demande-desc">"${d.desc}"</div>
+      <div class="demande-actions">
+        <button class="btn-accept" onclick="accepter(${i})">✓ Accepter</button>
+        <button class="btn-detail" onclick="showToast('📋 Détails de la demande')">Détails</button>
+        <button class="btn-reject" onclick="refuser(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function accepter(i) {
+  document.getElementById('dem-'+i).style.display = 'none';
+  showToast('✅ Demande acceptée ! Le client a été notifié.');
+}
+function refuser(i) {
+  document.getElementById('dem-'+i).style.display = 'none';
+  showToast('✕ Demande refusée.');
+}
+
+/* ═══ PLANNING ═══ */
+function renderPlanning() {
+  document.getElementById('planningList').innerHTML = PLANNING.map(p => `
+    <div class="planning-day">
+      <div class="planning-time">${p.time}</div>
+      <div class="planning-bar" style="background:${p.color};"></div>
+      <div class="planning-info">
+        <div class="planning-title">${p.title}</div>
+        <div class="planning-client">👤 ${p.client}</div>
+      </div>
+      <span class="planning-badge" style="background:${p.bg};color:${p.color};">${p.statut}</span>
+    </div>
+  `).join('');
+}
+
+/* ═══ GRAPHIQUE ═══ */
+function renderChart(mois, vals) {
+  const max = Math.max(...vals);
+  document.getElementById('chartWrap').innerHTML = vals.map((v,i) => `
+    <div class="bar-col">
+      <div class="bar-val">${v}</div>
+      <div class="bar-fill" style="height:${(v/max)*96}px;background:${i===vals.length-1?'linear-gradient(180deg,#E85D26,#F59E0B)':'#FFE8DF'};"></div>
+      <div class="bar-lbl">${mois[i]}</div>
+    </div>
+  `).join('');
+}
+
+function setPeriode(p, btn) {
+  document.querySelectorAll('[onclick^="setPeriode"]').forEach(b => {b.className='btn-outline';b.style.cssText='font-size:12px;padding:6px 12px;';});
+  btn.className='btn-primary'; btn.style.cssText='font-size:12px;padding:6px 12px;';
+  renderChart(p==='6m'?MOIS_6:MOIS_12, p==='6m'?VALS_6:VALS_12);
+}
+
+/* ═══ PERFORMANCE ═══ */
+function renderPerf() {
+  document.getElementById('perfList').innerHTML = PERF.map(p => `
+    <div class="perf-row">
+      <span class="perf-label">${p.label}</span>
+      <div class="perf-bar-wrap"><div class="perf-bar" style="width:${p.val}%"></div></div>
+      <span class="perf-val">${p.str}</span>
+    </div>
+  `).join('');
+}
+
+/* ═══ MISSIONS ═══ */
+function filterMissions(val) {
+  const data = val==='tous' ? MISSIONS : MISSIONS.filter(m=>m.statut===val);
+  renderMissions(data);
+}
+
+function renderMissions(data) {
+  const stMap = { "en-cours":{lbl:"En cours",cls:"badge-blue"}, "termine":{lbl:"Terminé",cls:"badge-green"}, "annule":{lbl:"Annulé",cls:"badge-gray"} };
+  document.getElementById('missionsTable').innerHTML = data.map(m => `
+    <tr>
+      <td style="font-weight:700;">${m.client}</td>
+      <td style="color:var(--slate);">${m.service}</td>
+      <td style="color:var(--slate);">${m.date}</td>
+      <td style="color:var(--slate);">${m.duree}</td>
+      <td style="font-weight:800;color:#059669;">${m.montant}</td>
+      <td>${m.note ? '<span style="color:#F59E0B;">'+('★'.repeat(m.note))+'</span>' : '<span style="color:#CBD5E1;font-size:12px;">Non noté</span>'}</td>
+      <td><span class="badge ${stMap[m.statut].cls}">${stMap[m.statut].lbl}</span></td>
+      <td>
+        <button class="btn-sm orange" onclick="showToast('📋 Détails mission')">Voir</button>
+        ${m.statut==='termine' ? '<button class="btn-sm green" onclick="showToast(\'📄 Facture générée\')">Facture</button>' : ''}
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ═══ AVIS ═══ */
+function renderAvis() {
+  document.getElementById('avisRecents').innerHTML = AVIS.map(a => `
+    <div class="avis-mini">
+      <div class="avis-av">${a.init}</div>
+      <div style="flex:1;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="avis-name">${a.nom}</span>
+          <span class="avis-date">${a.date}</span>
+        </div>
+        <div style="color:#F59E0B;font-size:13px;">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div>
+        <p class="avis-text">"${a.texte}"</p>
+        <button onclick="showToast('💬 Réponse envoyée !')" style="margin-top:6px;padding:4px 12px;background:var(--primary-light);color:var(--primary);border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">Répondre</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ═══ NOTES ═══ */
+function renderNotes() {
+  const data = [{n:5,pct:88},{n:4,pct:9},{n:3,pct:2},{n:2,pct:1},{n:1,pct:0}];
+  document.getElementById('notesRepartition').innerHTML = data.map(d => `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="font-size:12px;color:var(--slate);width:12px;">${d.n}</span>
+      <div style="flex:1;height:8px;background:#F1F5F9;border-radius:20px;overflow:hidden;">
+        <div style="height:100%;border-radius:20px;background:linear-gradient(135deg,#E85D26,#F59E0B);width:${d.pct}%;"></div>
+      </div>
+      <span style="font-size:12px;color:var(--slate);width:30px;text-align:right;">${d.pct}%</span>
+    </div>
+  `).join('');
+}
+
+/* ═══ DISPO ═══ */
+function toggleDispo(el) {
+  dispoActif = !dispoActif;
+  document.getElementById('dispoDot').style.background = dispoActif ? '#4ADE80' : '#94A3B8';
+  document.getElementById('dispoLabel').textContent    = dispoActif ? 'Disponible' : 'Indisponible';
+  showToast(dispoActif ? '✅ Vous êtes maintenant disponible' : '⏸️ Vous êtes maintenant indisponible');
+}
+
+/* ═══ UTILS ═══ */
+function exportData() { showToast('📊 Export CSV en cours de préparation…'); }
+function scrollTo(id) { document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+
+<script>
+window.addEventListener('DOMContentLoaded', async () => {
+  const user = Auth.getUser();
+  if (!user || user.role !== 'prestataire') { location.href = '08_connexion.html'; return; }
+
+  // Afficher le nom
+  document.querySelectorAll('.presta-prenom, .user-prenom').forEach(el => el.textContent = user.prenom);
+
+  // Charger les missions
+  try {
+    const data = await apiFetch('reservations.php');
+    if (data.success) {
+      const missions = data.data.reservations;
+      const enCours  = missions.filter(r => r.statut === 'en-cours' || r.statut === 'confirme').length;
+      const termines = missions.filter(r => r.statut === 'termine').length;
+      console.log('Missions:', missions.length, 'En cours:', enCours, 'Terminées:', termines);
+    }
+  } catch(e) {}
+
+  // Notifications
+  try {
+    const notifs = await apiFetch('notifications.php');
+    if (notifs.success && notifs.data.non_lues > 0) {
+      document.querySelectorAll('.notif-badge').forEach(el => el.textContent = notifs.data.non_lues);
+    }
+  } catch(e) {}
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ServicesPlus – FAQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#E85D26;--pl:#FFF0EB;--gold:#F59E0B;--dark:#0F172A;--slate:#64748B;--border:#E9EEF4;--bg:#F6F8FB;--green:#059669;--blue:#2563EB}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark)}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:999;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:66px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:24px}
+    .logo-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:19px}
+    .logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:900}
+    .logo-text span:first-child{color:var(--primary)}
+    .logo-text span:last-child{color:var(--dark)}
+    .nav-links{display:flex;gap:4px;flex:1}
+    .nl{padding:7px 14px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;background:transparent;color:var(--slate);text-decoration:none;display:inline-flex;align-items:center;transition:all .15s}
+    .nl:hover,.nl.active{background:var(--pl);color:var(--primary)}
+    .nav-r{display:flex;gap:10px;padding-left:16px;border-left:1px solid var(--border)}
+    .btn-login{padding:8px 18px;background:transparent;color:var(--slate);border:1.5px solid var(--border);border-radius:10px;font-weight:600;cursor:pointer;font-size:13px;transition:all .15s}
+    .btn-login:hover{border-color:var(--primary);color:var(--primary)}
+    .btn-reg{padding:8px 18px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
+
+    /* HERO */
+    .hero{background:linear-gradient(130deg,#1A3560,#2563EB,#E85D26);padding:64px 40px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px);background-size:26px 26px}
+    .hero-inner{position:relative;max-width:700px;margin:0 auto}
+    .hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.13);border-radius:20px;padding:6px 18px;margin-bottom:20px}
+    .hero-badge span{color:rgba(255,255,255,0.9);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+    .hero h1{font-family:'Playfair Display',serif;color:white;font-size:42px;font-weight:900;margin-bottom:14px;line-height:1.15}
+    .hero h1 em{color:#FCD34D;font-style:normal}
+    .hero p{color:rgba(255,255,255,0.78);font-size:15px;margin-bottom:32px;line-height:1.75}
+    .search-bar{display:flex;background:white;border-radius:14px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,0.2);max-width:560px;margin:0 auto}
+    .search-bar input{flex:1;padding:16px 20px;border:none;outline:none;font-size:14px;font-family:'Inter',sans-serif;color:var(--dark)}
+    .search-bar button{padding:16px 26px;background:var(--primary);color:white;border:none;cursor:pointer;font-size:14px;font-weight:800;transition:opacity .15s}
+    .search-bar button:hover{opacity:.88}
+
+    /* STATS */
+    .stats-bar{background:white;border-bottom:1px solid var(--border);padding:20px 40px}
+    .stats-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:center;gap:48px}
+    .stat-item{text-align:center}
+    .stat-val{font-size:22px;font-weight:900;color:var(--primary);margin-bottom:3px}
+    .stat-lbl{font-size:12px;color:var(--slate)}
+
+    /* LAYOUT */
+    .container{max-width:1100px;margin:0 auto;padding:40px 20px}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:start}
+
+    /* SIDEBAR CATÉGORIES */
+    .sidebar{background:white;border-radius:18px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,0.05);overflow:hidden;position:sticky;top:86px}
+    .sb-title{padding:18px 20px;font-weight:800;font-size:15px;border-bottom:1px solid var(--border)}
+    .cat-item{display:flex;align-items:center;gap:10px;padding:13px 20px;cursor:pointer;font-size:13px;font-weight:600;color:var(--slate);transition:all .15s;border:none;background:transparent;width:100%;font-family:'Inter',sans-serif;text-align:left;border-bottom:1px solid #F8FAFC}
+    .cat-item:last-child{border-bottom:none}
+    .cat-item:hover,.cat-item.active{background:var(--pl);color:var(--primary)}
+    .cat-item .ic{font-size:18px;width:24px;text-align:center}
+    .cat-item .cnt{margin-left:auto;background:#F1F5F9;color:var(--slate);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+    .cat-item.active .cnt{background:var(--primary);color:white}
+
+    /* FAQ ITEMS */
+    .faq-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:gap}
+    .faq-count{font-size:14px;color:var(--slate)}
+    .faq-sort{padding:8px 14px;border-radius:9px;border:1.5px solid var(--border);font-size:13px;font-family:'Inter',sans-serif;outline:none;background:white;cursor:pointer}
+
+    .faq-item{background:white;border-radius:16px;border:1.5px solid var(--border);box-shadow:0 2px 6px rgba(15,23,42,0.04);margin-bottom:10px;overflow:hidden;transition:all .2s}
+    .faq-item.open{border-color:var(--primary);box-shadow:0 4px 16px rgba(232,93,38,0.1)}
+    .faq-q{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;cursor:pointer;gap:14px}
+    .faq-q-text{font-weight:700;font-size:15px;line-height:1.4;flex:1}
+    .faq-icon{font-size:20px;color:var(--primary);flex-shrink:0;font-weight:900;transition:transform .25s;width:24px;text-align:center}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+    .faq-a{display:none;padding:0 22px 20px}
+    .faq-item.open .faq-a{display:block}
+    .faq-a-text{color:#475569;font-size:14px;line-height:1.8;margin-bottom:12px}
+    .faq-a-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .faq-tag{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:#F1F5F9;color:var(--slate)}
+    .faq-helpful{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:12px;color:var(--slate)}
+    .faq-helpful button{padding:5px 12px;border-radius:8px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;transition:all .15s}
+    .faq-helpful button:hover{border-color:var(--primary);color:var(--primary)}
+    .faq-helpful button.voted{border-color:var(--green);background:#ECFDF5;color:var(--green)}
+
+    /* POPULAR */
+    .popular-section{margin-bottom:28px}
+    .pop-title{font-weight:800;font-size:16px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .pop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .pop-card{background:white;border-radius:14px;border:1.5px solid var(--border);padding:14px 16px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px}
+    .pop-card:hover{border-color:var(--primary);background:var(--pl)}
+    .pop-ic{font-size:20px}
+    .pop-text{font-size:13px;font-weight:600;line-height:1.4;flex:1}
+    .pop-arrow{font-size:14px;color:#CBD5E1}
+
+    /* CTA CONTACT */
+    .cta-contact{background:linear-gradient(130deg,#1A3560,#E85D26);border-radius:20px;padding:36px;text-align:center;margin-top:28px}
+    .cta-contact h3{font-family:'Playfair Display',serif;color:white;font-size:22px;font-weight:900;margin-bottom:10px}
+    .cta-contact p{color:rgba(255,255,255,0.78);font-size:14px;margin-bottom:22px;line-height:1.7}
+    .cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .btn-white{padding:12px 24px;background:white;color:var(--primary);border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px;transition:opacity .15s}
+    .btn-white:hover{opacity:.9}
+    .btn-ghost{padding:12px 24px;background:transparent;color:white;border:2px solid rgba(255,255,255,0.4);border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;transition:border-color .15s}
+    .btn-ghost:hover{border-color:white}
+
+    /* GUIDE */
+    .guide-section{margin-bottom:28px}
+    .guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .guide-card{background:white;border-radius:14px;border:1.5px solid var(--border);padding:18px;text-align:center;cursor:pointer;transition:all .2s}
+    .guide-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 8px 24px rgba(232,93,38,0.1)}
+    .guide-ic{font-size:32px;margin-bottom:10px}
+    .guide-title{font-weight:800;font-size:14px;margin-bottom:4px}
+    .guide-sub{font-size:12px;color:var(--slate);line-height:1.5}
+
+    /* VIDE */
+    .empty{text-align:center;padding:48px 20px;background:white;border-radius:18px;border:1.5px solid var(--border)}
+    .empty-ic{font-size:52px;margin-bottom:14px}
+    .empty-title{font-weight:800;font-size:18px;margin-bottom:8px}
+    .empty-sub{color:var(--slate);font-size:14px}
+
+    /* FOOTER */
+    footer{background:#0F172A;color:#94A3B8;padding:40px 40px 24px}
+    .footer-inner{max-width:1100px;margin:0 auto}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:28px}
+    .footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .footer-logo-ic{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:18px}
+    .footer-logo-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:white}
+    .footer-logo-text span{color:var(--primary)}
+    .fc h4{color:white;font-weight:800;font-size:14px;margin-bottom:14px}
+    .fc ul{list-style:none}
+    .fc ul li{margin-bottom:9px;font-size:13px;cursor:pointer;transition:color .15s}
+    .fc ul li:hover{color:white}
+    .footer-bottom{border-top:1px solid #1E293B;padding-top:20px;display:flex;justify-content:space-between;font-size:12px}
+    .footer-bottom b{color:var(--primary)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;color:white;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .3s;opacity:0;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
+  <script src="api.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="01_accueil.html" class="logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-text"><span>Services</span><span>Plus</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="01_accueil.html"          class="nl">Accueil</a>
+    <a href="02_recherche.html"        class="nl">Recherche</a>
+    <a href="05_reservation.html"      class="nl">Réservation</a>
+    <a href="07_dashboard_client.html" class="nl">Dashboard</a>
+    <a href="12_faq.html"              class="nl active">FAQ</a>
+    <a href="13_contact.html"          class="nl">Contact</a>
+  </div>
+  <div class="nav-r">
+    <button class="btn-login" onclick="location.href='10_connexion.html'">Connexion</button>
+    <button class="btn-reg"   onclick="location.href='11_inscription.html'">S'inscrire</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span>❓ Centre d'aide ServicesPlus</span></div>
+    <h1>Trouvez rapidement<br/><em>vos réponses</em></h1>
+    <p>Plus de 60 questions répondues par notre équipe.<br/>Trouvez l'aide dont vous avez besoin en quelques secondes.</p>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Recherchez une question... Ex : comment réserver ?" oninput="rechercherFAQ(this.value)"/>
+      <button onclick="rechercherFAQ(document.getElementById('searchInput').value)">🔍 Rechercher</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-val">60+</div><div class="stat-lbl">Questions répondues</div></div>
+    <div class="stat-item"><div class="stat-val">8</div><div class="stat-lbl">Catégories</div></div>
+    <div class="stat-item"><div class="stat-val">98%</div><div class="stat-lbl">Taux de satisfaction</div></div>
+    <div class="stat-item"><div class="stat-val">&lt; 2h</div><div class="stat-lbl">Temps de réponse support</div></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-title">📚 Catégories</div>
+      <div id="catMenu"></div>
+    </aside>
+
+    <!-- CONTENU -->
+    <main>
+
+      <!-- GUIDES RAPIDES -->
+      <div class="guide-section">
+        <div class="pop-title">🚀 Guides rapides</div>
+        <div class="guide-grid">
+          <div class="guide-card" onclick="location.href='04_reservation.html'">
+            <div class="guide-ic">📅</div>
+            <div class="guide-title">Comment réserver ?</div>
+            <div class="guide-sub">Guide étape par étape pour votre première réservation</div>
+          </div>
+          <div class="guide-card" onclick="location.href='11_inscription.html'">
+            <div class="guide-ic">🔧</div>
+            <div class="guide-title">Devenir prestataire</div>
+            <div class="guide-sub">Créez votre compte professionnel et commencez à gagner</div>
+          </div>
+          <div class="guide-card" onclick="location.href='13_contact.html'">
+            <div class="guide-ic">💬</div>
+            <div class="guide-title">Contacter le support</div>
+            <div class="guide-sub">Notre équipe répond sous 2h en jours ouvrés</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POPULAIRES -->
+      <div class="popular-section" id="popularSection">
+        <div class="pop-title">🔥 Questions populaires</div>
+        <div class="pop-grid" id="popularGrid"></div>
+      </div>
+
+      <!-- LISTE FAQ -->
+      <div class="faq-header">
+        <span class="faq-count" id="faqCount"></span>
+        <select class="faq-sort" onchange="sortFAQ(this.value)">
+          <option value="default">Trier par défaut</option>
+          <option value="popular">Plus populaires</option>
+          <option value="recent">Plus récentes</option>
+        </select>
+      </div>
+
+      <div id="faqList"></div>
+
+      <!-- CTA CONTACT -->
+      <div class="cta-contact">
+        <h3>Vous n'avez pas trouvé votre réponse ? 🤔</h3>
+        <p>Notre équipe support est disponible 7j/7 de 8h à 20h.<br/>Nous répondons sous 2h en jours ouvrés.</p>
+        <div class="cta-btns">
+          <button class="btn-white" onclick="location.href='13_contact.html'">📧 Nous contacter</button>
+          <button class="btn-ghost" onclick="T('💬 Chat en cours d\'ouverture...')">💬 Chat en direct</button>
+          <button class="btn-ghost" onclick="T('📞 +221 33 000 00 00')">📞 Nous appeler</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="footer-logo-ic">🏠</div>
+          <div class="footer-logo-text"><span>Services</span>Plus</div>
+        </div>
+        <p style="font-size:13px;line-height:1.8;margin-bottom:8px;">La plateforme qui met en relation clients et prestataires de services à domicile au Sénégal.</p>
+        <p style="font-size:11px;color:#475569;">UNCHK — Groupe 18 — Licence Dev. Web S6 — 2024/2025</p>
+      </div>
+      <div class="fc"><h4>Services</h4><ul><li>Plomberie</li><li>Électricité</li><li>Ménage</li><li>Jardinage</li><li>Peinture</li></ul></div>
+      <div class="fc"><h4>Aide</h4><ul>
+        <li onclick="location.href='12_faq.html'">FAQ</li>
+        <li onclick="location.href='13_contact.html'">Contact</li>
+        <li onclick="location.href='11_inscription.html'">Devenir prestataire</li>
+        <li>Conditions d'utilisation</li>
+        <li>Confidentialité</li>
+      </ul></div>
+      <div class="fc"><h4>Contact</h4><ul>
+        <li>📧 contact@servicesplus.sn</li>
+        <li>📞 +221 33 000 00 00</li>
+        <li>📍 Dakar, Sénégal</li>
+        <li>💬 Chat en ligne</li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 <b>ServicesPlus</b>. Tous droits réservés.</span>
+      <span>Fait avec ❤️ par le <b>Groupe 18 — UNCHK</b></span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════ DONNÉES FAQ ════ */
+const CATEGORIES = [
+  {id:"tous",      ic:"🔔", lbl:"Toutes les questions", count:0},
+  {id:"compte",    ic:"👤", lbl:"Compte & Inscription",  count:8},
+  {id:"recherche", ic:"🔍", lbl:"Recherche & Prestataires",count:7},
+  {id:"reservation",ic:"📅",lbl:"Réservation",           count:10},
+  {id:"paiement",  ic:"💳", lbl:"Paiement",              count:8},
+  {id:"prestataire",ic:"🔧",lbl:"Espace prestataire",    count:9},
+  {id:"securite",  ic:"🛡️", lbl:"Sécurité",              count:6},
+  {id:"technique", ic:"⚙️", lbl:"Problèmes techniques",  count:7},
+  {id:"autre",     ic:"💬", lbl:"Autres questions",       count:5},
+];
+
+const FAQ_DATA = [
+  /* COMPTE */
+  {id:1,  cat:"compte",    pop:true,  q:"Comment créer un compte sur ServicesPlus ?",
+   a:"Cliquez sur 'S'inscrire' en haut à droite de la page. Choisissez votre type de compte (Client ou Prestataire), renseignez vos informations personnelles (nom, email, téléphone, ville), créez un mot de passe sécurisé, puis acceptez les conditions d'utilisation. Votre compte est créé immédiatement et vous pouvez l'utiliser tout de suite.",
+   tags:["Inscription","Compte"]},
+
+  {id:2,  cat:"compte",    pop:false, q:"Comment modifier mes informations personnelles ?",
+   a:"Connectez-vous à votre compte, puis rendez-vous dans 'Mon Profil' via le menu en haut à droite. Vous pouvez y modifier votre prénom, nom, email, téléphone, ville et adresse. N'oubliez pas de cliquer sur 'Sauvegarder' après vos modifications.",
+   tags:["Profil","Paramètres"]},
+
+  {id:3,  cat:"compte",    pop:true,  q:"J'ai oublié mon mot de passe, que faire ?",
+   a:"Sur la page de connexion, cliquez sur 'Mot de passe oublié ?'. Entrez votre adresse email et nous vous enverrons un lien de réinitialisation. Ce lien est valable 24 heures. Si vous ne recevez pas l'email, vérifiez votre dossier spam ou contactez notre support.",
+   tags:["Mot de passe","Sécurité"]},
+
+  {id:4,  cat:"compte",    pop:false, q:"Comment supprimer mon compte ?",
+   a:"Allez dans 'Mon Profil' > 'Confidentialité' > 'Zone de danger' et cliquez sur 'Supprimer le compte'. Cette action est irréversible : toutes vos données, réservations et historiques seront définitivement effacés. Nous vous recommandons de télécharger vos données avant la suppression.",
+   tags:["Compte","Données"]},
+
+  {id:5,  cat:"compte",    pop:false, q:"Puis-je avoir plusieurs comptes ?",
+   a:"Non, vous ne pouvez avoir qu'un seul compte par adresse email et numéro de téléphone. Cependant, si vous êtes à la fois client et prestataire, vous pouvez basculer entre les deux rôles depuis votre profil sans créer un second compte.",
+   tags:["Compte","Règles"]},
+
+  /* RECHERCHE */
+  {id:6,  cat:"recherche", pop:true,  q:"Comment trouver un prestataire près de moi ?",
+   a:"Rendez-vous sur la page 'Recherche', entrez votre ville dans le champ prévu et sélectionnez le service dont vous avez besoin. Vous pouvez affiner les résultats avec les filtres : distance, note minimum, tarif maximum et disponibilité. Les prestataires sont classés par note par défaut.",
+   tags:["Recherche","Localisation"]},
+
+  {id:7,  cat:"recherche", pop:false, q:"Comment les prestataires sont-ils vérifiés ?",
+   a:"Chaque prestataire doit fournir une pièce d'identité valide, un justificatif de compétence (diplôme ou certificat), une assurance responsabilité civile professionnelle et une photo de profil. Notre équipe vérifie manuellement chaque dossier sous 48h ouvrées avant de valider le compte.",
+   tags:["Vérification","Sécurité"]},
+
+  {id:8,  cat:"recherche", pop:true,  q:"Que signifie le badge 'Certifié Pro' ?",
+   a:"Le badge 'Certifié Pro' est attribué aux prestataires qui ont fourni tous les documents requis (identité, diplôme, assurance) et dont le dossier a été validé par notre équipe. C'est une garantie de professionnalisme et de sérieux.",
+   tags:["Badge","Certification"]},
+
+  {id:9,  cat:"recherche", pop:false, q:"Comment filtrer par disponibilité ?",
+   a:"Dans la page Recherche, cochez la case 'Disponible maintenant' dans le panneau de filtres à gauche. Vous verrez uniquement les prestataires qui ont activé leur disponibilité en temps réel. Vous pouvez aussi consulter le planning de chaque prestataire sur leur profil.",
+   tags:["Filtres","Disponibilité"]},
+
+  /* RÉSERVATION */
+  {id:10, cat:"reservation",pop:true, q:"Comment faire une réservation ?",
+   a:"1) Trouvez votre prestataire via la Recherche. 2) Consultez son profil et ses disponibilités. 3) Cliquez sur 'Réserver'. 4) Choisissez la date, l'heure et la durée. 5) Renseignez votre adresse et décrivez votre besoin. 6) Confirmez le paiement. Vous recevrez une confirmation par email et SMS.",
+   tags:["Réservation","Guide"]},
+
+  {id:11, cat:"reservation",pop:false,q:"Puis-je annuler ou modifier une réservation ?",
+   a:"Oui, vous pouvez annuler ou modifier une réservation depuis votre Dashboard dans 'Mes réservations'. Les annulations sont gratuites si effectuées plus de 24h avant l'intervention. En dessous de 24h, des frais d'annulation de 20% peuvent s'appliquer selon les conditions du prestataire.",
+   tags:["Annulation","Modification"]},
+
+  {id:12, cat:"reservation",pop:true, q:"Que faire si le prestataire ne se présente pas ?",
+   a:"Si votre prestataire ne se présente pas et ne répond pas à vos appels, contactez notre support via le chat ou le téléphone. Nous intervenons immédiatement pour vous trouver un remplaçant ou vous rembourser intégralement. Votre satisfaction est notre priorité.",
+   tags:["Assistance","Remboursement"]},
+
+  {id:13, cat:"reservation",pop:false,q:"Comment fonctionne la garantie de satisfaction ?",
+   a:"Si vous n'êtes pas satisfait du service rendu, contactez notre équipe dans les 24h suivant l'intervention avec une description précise du problème. Nous organisons une médiation entre vous et le prestataire. Si aucune solution n'est trouvée, un remboursement total ou partiel sera effectué.",
+   tags:["Garantie","Remboursement"]},
+
+  /* PAIEMENT */
+  {id:14, cat:"paiement",  pop:true,  q:"Quels modes de paiement sont acceptés ?",
+   a:"ServicesPlus accepte : les cartes bancaires (Visa, Mastercard), Orange Money, Wave et le paiement en espèces directement au prestataire. Tous les paiements en ligne sont sécurisés par chiffrement SSL. Le paiement est débité après la confirmation de l'intervention.",
+   tags:["Paiement","Sécurité"]},
+
+  {id:15, cat:"paiement",  pop:false, q:"Quand est-il débité le paiement ?",
+   a:"Le paiement est préautorisé au moment de la réservation mais n'est débité qu'après la confirmation de l'intervention par les deux parties. Si l'intervention est annulée, le paiement est restitué dans les 3 à 5 jours ouvrés selon votre banque.",
+   tags:["Débit","Remboursement"]},
+
+  {id:16, cat:"paiement",  pop:true,  q:"Comment obtenir une facture ?",
+   a:"Votre facture est générée automatiquement après chaque intervention. Vous pouvez la télécharger depuis votre Dashboard > Mes réservations > cliquez sur la réservation concernée > Télécharger la facture. La facture est également envoyée automatiquement par email.",
+   tags:["Facture","Téléchargement"]},
+
+  {id:17, cat:"paiement",  pop:false, q:"Le paiement est-il sécurisé ?",
+   a:"Oui, tous les paiements sur ServicesPlus sont sécurisés par un chiffrement SSL 256 bits. Nous ne stockons jamais vos données bancaires complètes sur nos serveurs. Les transactions sont traitées par des partenaires de paiement certifiés PCI DSS.",
+   tags:["Sécurité","Paiement"]},
+
+  /* PRESTATAIRE */
+  {id:18, cat:"prestataire",pop:true, q:"Comment devenir prestataire sur ServicesPlus ?",
+   a:"Créez un compte en choisissant 'Prestataire', remplissez votre profil professionnel (service, tarif, zone d'intervention), uploadez vos documents (CNI, diplôme, assurance RC, photo). Notre équipe valide votre dossier sous 48h et vous recevez une notification par email.",
+   tags:["Inscription","Prestataire"]},
+
+  {id:19, cat:"prestataire",pop:false,q:"Quelle commission prend ServicesPlus ?",
+   a:"ServicesPlus prélève une commission de 5% sur chaque réservation complétée. Cette commission couvre les frais de plateforme, l'assurance, le support client et la visibilité auprès de milliers de clients. Il n'y a aucun abonnement mensuel ni frais fixe.",
+   tags:["Commission","Tarifs"]},
+
+  {id:20, cat:"prestataire",pop:true, q:"Comment recevoir mes paiements ?",
+   a:"Vos revenus sont versés directement sur votre compte Orange Money, Wave ou bancaire sous 48h après la confirmation de chaque mission. Vous pouvez consulter et suivre tous vos paiements depuis votre espace prestataire dans la section 'Revenus'.",
+   tags:["Paiement","Revenus"]},
+
+  /* SÉCURITÉ */
+  {id:21, cat:"securite",  pop:true,  q:"Comment protéger mon compte ?",
+   a:"Nous vous recommandons : d'utiliser un mot de passe fort (min. 8 caractères, majuscules, chiffres et caractères spéciaux), d'activer l'authentification à 2 facteurs dans les paramètres de sécurité, de ne jamais partager votre mot de passe et de vous déconnecter sur les appareils partagés.",
+   tags:["Sécurité","Mot de passe"]},
+
+  {id:22, cat:"securite",  pop:false, q:"Mes données personnelles sont-elles protégées ?",
+   a:"Oui, ServicesPlus respecte le RGPD et les réglementations sénégalaises sur la protection des données. Vos données ne sont jamais vendues à des tiers. Elles sont utilisées uniquement pour faire fonctionner la plateforme et améliorer votre expérience. Vous pouvez demander la suppression de vos données à tout moment.",
+   tags:["RGPD","Données"]},
+
+  /* TECHNIQUE */
+  {id:23, cat:"technique", pop:false, q:"L'application ne fonctionne pas, que faire ?",
+   a:"Essayez dans cet ordre : 1) Rafraîchissez la page (Ctrl+R). 2) Videz le cache de votre navigateur. 3) Essayez avec un autre navigateur. 4) Vérifiez votre connexion internet. 5) Si le problème persiste, contactez notre support en précisant votre navigateur et le message d'erreur.",
+   tags:["Bug","Support"]},
+
+  {id:24, cat:"technique", pop:false, q:"Je ne reçois pas les emails de confirmation.",
+   a:"Vérifiez d'abord votre dossier spam ou courrier indésirable. Assurez-vous que l'adresse email renseignée sur votre compte est correcte (vérifiable dans Mon Profil). Ajoutez contact@servicesplus.sn à vos contacts pour éviter les filtres. Si le problème persiste, contactez notre support.",
+   tags:["Email","Notifications"]},
+
+  /* AUTRE */
+  {id:25, cat:"autre",     pop:false, q:"Puis-je utiliser ServicesPlus depuis mon téléphone ?",
+   a:"Oui ! ServicesPlus est entièrement responsive et fonctionne parfaitement sur mobile, tablette et ordinateur depuis n'importe quel navigateur. Une application mobile native est également disponible sur Android et iOS dans vos stores respectifs.",
+   tags:["Mobile","Application"]},
+];
+
+let catActive = "tous";
+let faqOuverts = {};
+
+/* ════ INIT ════ */
+window.onload = () => {
+  CATEGORIES[0].count = FAQ_DATA.length;
+  renderCats();
+  renderPopulaires();
+  renderFAQ(FAQ_DATA);
+};
+
+/* ════ CATÉGORIES ════ */
+function renderCats() {
+  document.getElementById('catMenu').innerHTML = CATEGORIES.map(c => `
+    <button class="cat-item ${catActive===c.id?'active':''}" onclick="setCat('${c.id}',this)">
+      <span class="ic">${c.ic}</span>
+      <span>${c.lbl}</span>
+      <span class="cnt">${c.count}</span>
+    </button>
+  `).join('');
+}
+
+function setCat(id, el) {
+  catActive = id;
+  document.querySelectorAll('.cat-item').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const data = id==='tous' ? FAQ_DATA : FAQ_DATA.filter(f=>f.cat===id);
+  renderFAQ(data);
+  document.getElementById('popularSection').style.display = id==='tous' ? 'block' : 'none';
+  document.getElementById('searchInput').value = '';
+}
+
+/* ════ POPULAIRES ════ */
+function renderPopulaires() {
+  const pop = FAQ_DATA.filter(f=>f.pop).slice(0,6);
+  document.getElementById('popularGrid').innerHTML = pop.map(f=>`
+    <div class="pop-card" onclick="ouvrirFAQ(${f.id})">
+      <span class="pop-ic">❓</span>
+      <span class="pop-text">${f.q}</span>
+      <span class="pop-arrow">›</span>
+    </div>
+  `).join('');
+}
+
+/* ════ LISTE FAQ ════ */
+function renderFAQ(data) {
+  document.getElementById('faqCount').textContent = `${data.length} question${data.length>1?'s':''} trouvée${data.length>1?'s':''}`;
+
+  if (data.length === 0) {
+    document.getElementById('faqList').innerHTML = `
+      <div class="empty">
+        <div class="empty-ic">🔍</div>
+        <div class="empty-title">Aucune question trouvée</div>
+        <div class="empty-sub">Essayez d'autres mots-clés ou <a href="13_contact.html" style="color:var(--primary);font-weight:700;">contactez notre support</a>.</div>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('faqList').innerHTML = data.map(f => `
+    <div class="faq-item ${faqOuverts[f.id]?'open':''}" id="faq-${f.id}">
+      <div class="faq-q" onclick="toggleFAQ(${f.id})">
+        <span class="faq-q-text">${f.q}</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p class="faq-a-text">${f.a}</p>
+        <div class="faq-a-actions">
+          ${f.tags.map(t=>`<span class="faq-tag">${t}</span>`).join('')}
+          <div class="faq-helpful">
+            Utile ?
+            <button id="btn-yes-${f.id}" onclick="voter(${f.id},'yes')">👍 Oui</button>
+            <button id="btn-no-${f.id}"  onclick="voter(${f.id},'no')">👎 Non</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleFAQ(id) {
+  faqOuverts[id] = !faqOuverts[id];
+  const el = document.getElementById('faq-'+id);
+  el.classList.toggle('open', faqOuverts[id]);
+}
+
+function ouvrirFAQ(id) {
+  faqOuverts[id] = true;
+  setCat('tous', document.querySelector('.cat-item'));
+  setTimeout(()=>{
+    const el = document.getElementById('faq-'+id);
+    if(el){ el.classList.add('open'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+  },100);
+}
+
+function voter(id, type) {
+  const btn = document.getElementById(`btn-${type}-${id}`);
+  btn.classList.add('voted');
+  T(type==='yes' ? '👍 Merci pour votre retour !' : '👎 Merci ! Nous allons améliorer cette réponse.');
+}
+
+/* ════ RECHERCHE ════ */
+function rechercherFAQ(q) {
+  document.getElementById('popularSection').style.display = q ? 'none' : 'block';
+  if (!q.trim()) {
+    const data = catActive==='tous' ? FAQ_DATA : FAQ_DATA.filter(f=>f.cat===catActive);
+    renderFAQ(data);
+    return;
+  }
+  const ql = q.toLowerCase();
+  const data = FAQ_DATA.filter(f =>
+    f.q.toLowerCase().includes(ql) ||
+    f.a.toLowerCase().includes(ql) ||
+    f.tags.some(t=>t.toLowerCase().includes(ql))
+  );
+  renderFAQ(data);
+}
+
+/* ════ TRI ════ */
+function sortFAQ(val) {
+  let data = catActive==='tous' ? [...FAQ_DATA] : FAQ_DATA.filter(f=>f.cat===catActive);
+  if(val==='popular') data = data.sort((a,b)=>(b.pop?1:0)-(a.pop?1:0));
+  if(val==='recent')  data = data.sort((a,b)=>b.id-a.id);
+  renderFAQ(data);
+}
+
+/* ════ TOAST ════ */
+function T(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>

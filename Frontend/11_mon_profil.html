@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ServicesPlus – Mon Profil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#E85D26;--pl:#FFF0EB;--gold:#F59E0B;--dark:#0F172A;--slate:#64748B;--border:#E9EEF4;--bg:#F6F8FB;--green:#059669;--blue:#2563EB}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark)}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:999;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:66px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:24px}
+    .logo-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:19px}
+    .logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:900}
+    .logo-text span:first-child{color:var(--primary)}
+    .logo-text span:last-child{color:var(--dark)}
+    .nav-links{display:flex;gap:4px;flex:1}
+    .nl{padding:7px 14px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;background:transparent;color:var(--slate);text-decoration:none;display:inline-flex;align-items:center;transition:all .15s}
+    .nl:hover,.nl.active{background:var(--pl);color:var(--primary)}
+    .nav-r{display:flex;align-items:center;gap:10px;padding-left:16px;border-left:1px solid var(--border)}
+    .av-btn{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 12px;border-radius:11px;border:1.5px solid var(--border);background:white;transition:all .15s}
+    .av-btn:hover{border-color:var(--primary)}
+    .av-circle{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:15px}
+
+    /* LAYOUT */
+    .container{max-width:1100px;margin:0 auto;padding:32px 20px}
+    .dash{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:start}
+
+    /* SIDEBAR */
+    .sidebar{background:white;border-radius:20px;border:1.5px solid var(--border);overflow:hidden;position:sticky;top:86px;box-shadow:0 2px 8px rgba(15,23,42,0.05)}
+    .sb-cover{height:80px;background:linear-gradient(135deg,#1A3560,#2563EB,#E85D26);position:relative}
+    .sb-avatar-wrap{position:absolute;bottom:-36px;left:50%;transform:translateX(-50%)}
+    .sb-avatar{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,#E85D26,#F59E0B);border:4px solid white;display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;position:relative;overflow:hidden}
+    .sb-avatar-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;transition:opacity .2s}
+    .sb-avatar:hover .sb-avatar-overlay{opacity:1}
+    .sb-body{padding:46px 20px 20px;text-align:center}
+    .sb-name{font-weight:900;font-size:17px;margin-bottom:3px}
+    .sb-role{color:var(--slate);font-size:12px;margin-bottom:12px}
+    .sb-badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+    .sb-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+    .sb-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px;padding:14px;background:#F8FAFC;border-radius:14px}
+    .sb-stat-val{font-size:17px;font-weight:900;margin-bottom:2px}
+    .sb-stat-lbl{font-size:10px;color:#94A3B8}
+    .sb-menu{border-top:1px solid var(--border)}
+    .mi{display:flex;align-items:center;gap:10px;padding:12px 20px;cursor:pointer;font-size:13px;font-weight:600;color:var(--slate);transition:all .15s;border:none;background:transparent;width:100%;font-family:'Inter',sans-serif;text-align:left}
+    .mi:hover,.mi.active{background:var(--pl);color:var(--primary)}
+    .mi .ic{font-size:17px;width:22px;text-align:center}
+    .mi.danger{color:#DC2626}
+    .mi.danger:hover{background:#FEF2F2}
+    .msep{height:1px;background:var(--border)}
+
+    /* CARD */
+    .card{background:white;border-radius:18px;padding:24px;border:1.5px solid var(--border);box-shadow:0 2px 6px rgba(15,23,42,0.04);margin-bottom:18px}
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .card-title{font-weight:800;font-size:16px}
+
+    /* FORM */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .fg{display:flex;flex-direction:column;gap:7px}
+    .fg.full{grid-column:1/-1}
+    .fl{font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px}
+    .iw{position:relative}
+    .fi{width:100%;padding:12px 16px 12px 44px;border-radius:11px;border:1.5px solid var(--border);font-size:14px;font-family:'Inter',sans-serif;color:var(--dark);outline:none;transition:all .15s}
+    .fi:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(232,93,38,.1)}
+    .fi.no-ic{padding-left:16px}
+    .fi-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px}
+    .fi-tog{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:15px;background:none;border:none;color:var(--slate)}
+    textarea.fi{padding:12px 16px;resize:vertical;min-height:80px}
+
+    /* ONGLETS */
+    .tabs{display:flex;gap:2px;background:#F8FAFC;border-radius:13px;padding:5px;border:1.5px solid var(--border);margin-bottom:20px}
+    .tab{flex:1;padding:9px 0;border-radius:10px;border:none;cursor:pointer;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;background:transparent;color:var(--slate);transition:all .2s}
+    .tab.active{background:linear-gradient(135deg,#E85D26,#F59E0B);color:white}
+
+    /* SECTIONS */
+    .sec{display:none}
+    .sec.active{display:block}
+
+    /* PHOTO */
+    .photo-section{display:flex;align-items:center;gap:22px;padding:20px;background:#F8FAFC;border-radius:16px;margin-bottom:20px}
+    .photo-big{width:88px;height:88px;border-radius:22px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:40px;flex-shrink:0;border:3px solid white;box-shadow:0 4px 14px rgba(0,0,0,0.1)}
+    .photo-actions{display:flex;flex-direction:column;gap:8px}
+    .photo-name{font-weight:800;font-size:16px;margin-bottom:2px}
+    .photo-sub{font-size:12px;color:var(--slate);margin-bottom:8px}
+
+    /* SWITCH */
+    .sw{width:46px;height:26px;border-radius:20px;cursor:pointer;position:relative;transition:background .25s;flex-shrink:0}
+    .sw-dot{position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:white;box-shadow:0 2px 4px rgba(0,0,0,0.2);transition:left .25s}
+
+    /* SÉCURITÉ */
+    .sec-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #F8FAFC}
+    .sec-item:last-child{border-bottom:none}
+    .si-title{font-weight:700;font-size:14px;margin-bottom:2px}
+    .si-sub{font-size:12px;color:var(--slate)}
+
+    /* DANGER ZONE */
+    .danger-zone{border:1.5px solid #FECACA;border-radius:14px;padding:18px}
+    .dz-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #FEE2E2}
+    .dz-item:last-child{border-bottom:none}
+
+    /* PAIEMENT */
+    .pay-card{display:flex;align-items:center;gap:14px;padding:14px;background:#F8FAFC;border-radius:14px;border:1.5px solid var(--border);margin-bottom:10px;cursor:pointer;transition:all .15s}
+    .pay-card:hover{border-color:var(--primary)}
+    .pay-card.default{border-color:var(--primary);background:var(--pl)}
+    .pay-icon{font-size:26px}
+    .pay-name{font-weight:700;font-size:14px}
+    .pay-detail{font-size:12px;color:var(--slate)}
+
+    /* HISTORIQUE */
+    .hist-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #F8FAFC}
+    .hist-row:last-child{border-bottom:none}
+    .hist-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+
+    /* BOUTONS */
+    .btn-p{padding:10px 20px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:11px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:opacity .15s}
+    .btn-p:hover{opacity:.88}
+    .btn-o{padding:9px 18px;background:transparent;color:var(--slate);border:1.5px solid var(--border);border-radius:11px;font-weight:600;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all .15s}
+    .btn-o:hover{border-color:var(--primary);color:var(--primary)}
+    .btn-r{padding:9px 18px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:11px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif}
+
+    /* BADGE */
+    .badge{padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700}
+    .bg{color:#059669;background:#ECFDF5}
+    .bo{color:#D97706;background:#FFFBEB}
+    .bb{color:#2563EB;background:#EFF6FF}
+    .br{color:#DC2626;background:#FEF2F2}
+
+    /* PROGRESS BAR */
+    .progress-wrap{margin-bottom:14px}
+    .progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+    .progress-bar{height:8px;background:#F1F5F9;border-radius:20px;overflow:hidden}
+    .progress-fill{height:100%;border-radius:20px;background:linear-gradient(to right,#E85D26,#F59E0B)}
+
+    /* FOOTER */
+    footer{background:#0F172A;color:#94A3B8;padding:24px 40px 16px;margin-top:48px}
+    .fbot{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;font-size:12px;padding-top:12px;border-top:1px solid #1E293B}
+    .fbot b{color:var(--primary)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;color:white;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .3s;opacity:0;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
+  <script src="api.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="01_accueil.html" class="logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-text"><span>Services</span><span>Plus</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="01_accueil.html"          class="nl">Accueil</a>
+    <a href="02_recherche.html"        class="nl">Recherche</a>
+    <a href="04_reservation.html"      class="nl">Réservation</a>
+    <a href="05_dashboard_client.html" class="nl">Dashboard</a>
+    <a href="12_faq.html"              class="nl">FAQ</a>
+    <a href="13_contact.html"          class="nl">Contact</a>
+  </div>
+  <div class="nav-r">
+    <div class="av-btn">
+      <div class="av-circle">👤</div>
+      <span style="font-size:13px;font-weight:700;">Mohammed D.</span>
+    </div>
+    <button class="btn-o" style="font-size:12px;padding:7px 14px;" onclick="location.href='08_connexion.html'">Déconnexion</button>
+  </div>
+</nav>
+
+<div class="container">
+<div class="dash">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-cover">
+      <div class="sb-avatar-wrap">
+        <div class="sb-avatar" onclick="T('📸 Modifier la photo de profil')">
+          👤
+          <div class="sb-avatar-overlay">📸</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-body">
+      <div class="sb-name">Mohammed Dia</div>
+      <div class="sb-role">Client • Membre depuis Jan. 2024</div>
+      <div class="sb-badges">
+        <span class="sb-badge bg">✓ Vérifié</span>
+        <span class="sb-badge bb">Client actif</span>
+      </div>
+      <div class="sb-stats">
+        <div style="text-align:center;">
+          <div class="sb-stat-val" style="color:var(--primary)">12</div>
+          <div class="sb-stat-lbl">Services</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="sb-stat-val" style="color:#059669">4.8★</div>
+          <div class="sb-stat-lbl">Moyenne</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="sb-stat-val" style="color:#2563EB">2.4K</div>
+          <div class="sb-stat-lbl">MAD dép.</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-menu">
+      <button class="mi active" onclick="goSec('infos',this)"><span class="ic">👤</span> Informations</button>
+      <button class="mi" onclick="goSec('securite',this)"><span class="ic">🔐</span> Sécurité</button>
+      <button class="mi" onclick="goSec('paiement',this)"><span class="ic">💳</span> Paiements</button>
+      <button class="mi" onclick="goSec('notifs',this)"><span class="ic">🔔</span> Notifications</button>
+      <button class="mi" onclick="goSec('historique',this)"><span class="ic">🕐</span> Historique</button>
+      <button class="mi" onclick="goSec('confidentialite',this)"><span class="ic">🛡️</span> Confidentialité</button>
+      <div class="msep"></div>
+      <button class="mi danger" onclick="if(confirm('Se déconnecter ?')) location.href='08_connexion.html'"><span class="ic">🚪</span> Déconnexion</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- COMPLÉTION PROFIL -->
+    <div class="card" style="margin-bottom:18px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div>
+          <div style="font-weight:800;font-size:15px;margin-bottom:3px;">📊 Complétion du profil</div>
+          <div style="font-size:13px;color:var(--slate);">Complétez votre profil pour une meilleure expérience</div>
+        </div>
+        <div style="font-size:24px;font-weight:900;color:var(--primary);">75%</div>
+      </div>
+      <div class="progress-bar" style="margin-bottom:14px;">
+        <div class="progress-fill" style="width:75%;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="completionItems"></div>
+    </div>
+
+    <!-- ═══ SECTION INFOS ═══ -->
+    <div class="sec active" id="sec-infos">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">👤 Informations personnelles</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-o" onclick="resetForm()">Annuler</button>
+            <button class="btn-p" onclick="sauvegarder('informations')">💾 Sauvegarder</button>
+          </div>
+        </div>
+
+        <!-- PHOTO -->
+        <div class="photo-section">
+          <div class="photo-big">👤</div>
+          <div>
+            <div class="photo-name">Mohammed Dia</div>
+            <div class="photo-sub">JPG, PNG ou GIF — Max 5 MB</div>
+            <div class="photo-actions">
+              <div style="display:flex;gap:8px;">
+                <button class="btn-p" style="font-size:12px;padding:7px 14px;" onclick="T('📸 Sélection de photo...')">📸 Changer la photo</button>
+                <button class="btn-o" style="font-size:12px;padding:7px 14px;" onclick="T('🗑️ Photo supprimée')">Supprimer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="fg"><label class="fl">Prénom</label>
+            <div class="iw"><span class="fi-ic">👤</span><input type="text" class="fi" value="Mohammed" id="f-prenom"/></div>
+          </div>
+          <div class="fg"><label class="fl">Nom</label>
+            <div class="iw"><span class="fi-ic">👤</span><input type="text" class="fi" value="Dia" id="f-nom"/></div>
+          </div>
+          <div class="fg full"><label class="fl">Email</label>
+            <div class="iw"><span class="fi-ic">📧</span><input type="email" class="fi" value="mohammed.dia@email.com" id="f-email"/></div>
+          </div>
+          <div class="fg"><label class="fl">Téléphone</label>
+            <div class="iw"><span class="fi-ic">📞</span><input type="tel" class="fi" value="+221 77 000 00 00" id="f-phone"/></div>
+          </div>
+          <div class="fg"><label class="fl">Date de naissance</label>
+            <div class="iw"><span class="fi-ic">🎂</span><input type="date" class="fi" value="1990-05-15" id="f-dob"/></div>
+          </div>
+          <div class="fg"><label class="fl">Genre</label>
+            <div class="iw"><span class="fi-ic">👤</span>
+              <select class="fi" id="f-genre">
+                <option selected>Homme</option><option>Femme</option><option>Non précisé</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Ville</label>
+            <div class="iw"><span class="fi-ic">📍</span>
+              <select class="fi" id="f-ville">
+                <option selected>Dakar</option><option>Thiès</option><option>Saint-Louis</option>
+                <option>Ziguinchor</option><option>Kaolack</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg full"><label class="fl">Adresse complète</label>
+            <div class="iw"><span class="fi-ic">🏠</span><input type="text" class="fi" value="12 Rue Félix Faure, Plateau, Dakar" id="f-adresse"/></div>
+          </div>
+          <div class="fg full"><label class="fl">Bio / À propos</label>
+            <textarea class="fi no-ic" id="f-bio" rows="3">Client fidèle de ServicesPlus depuis 2024. J'apprécie les prestataires ponctuels et professionnels.</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION SÉCURITÉ ═══ -->
+    <div class="sec" id="sec-securite">
+      <div class="card">
+        <div class="card-header"><span class="card-title">🔐 Sécurité du compte</span></div>
+
+        <div class="form-grid" style="margin-bottom:20px;">
+          <div class="fg full"><label class="fl">Mot de passe actuel</label>
+            <div class="iw"><span class="fi-ic">🔒</span>
+              <input type="password" class="fi" id="pass-current" placeholder="••••••••"/>
+              <button class="fi-tog" onclick="toggleP('pass-current',this)">👁️</button>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Nouveau mot de passe</label>
+            <div class="iw"><span class="fi-ic">🔒</span>
+              <input type="password" class="fi" id="pass-new" placeholder="Min. 8 caractères" oninput="checkStr(this.value)"/>
+              <button class="fi-tog" onclick="toggleP('pass-new',this)">👁️</button>
+            </div>
+            <div style="margin-top:6px;">
+              <div style="height:4px;background:#F1F5F9;border-radius:20px;overflow:hidden;margin-bottom:3px;">
+                <div id="str-fill" style="height:100%;border-radius:20px;transition:all .3s;width:0;"></div>
+              </div>
+              <span id="str-text" style="font-size:11px;font-weight:600;"></span>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Confirmer le mot de passe</label>
+            <div class="iw"><span class="fi-ic">🔒</span>
+              <input type="password" class="fi" id="pass-confirm" placeholder="Retapez le nouveau mot de passe"/>
+              <button class="fi-tog" onclick="toggleP('pass-confirm',this)">👁️</button>
+            </div>
+          </div>
+          <div class="fg full" style="margin-top:4px;">
+            <button class="btn-p" onclick="sauvegarder('mot de passe')">🔐 Mettre à jour le mot de passe</button>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding-top:20px;">
+          <div style="font-weight:800;font-size:15px;margin-bottom:16px;">🛡️ Options de sécurité</div>
+          <div id="secOptions"></div>
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px;">
+          <div style="font-weight:800;font-size:15px;margin-bottom:14px;">🖥️ Sessions actives</div>
+          <div id="sessions"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION PAIEMENT ═══ -->
+    <div class="sec" id="sec-paiement">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💳 Moyens de paiement</span>
+          <button class="btn-p" onclick="T('➕ Ajouter un nouveau moyen de paiement')">+ Ajouter</button>
+        </div>
+        <div id="payMethods"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">📊 Résumé financier</span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;">
+          <div style="background:#F8FAFC;border-radius:14px;padding:16px;text-align:center;">
+            <div style="font-size:22px;font-weight:900;color:var(--primary);margin-bottom:4px;">2 450 MAD</div>
+            <div style="font-size:12px;color:var(--slate);">Total dépensé</div>
+          </div>
+          <div style="background:#F8FAFC;border-radius:14px;padding:16px;text-align:center;">
+            <div style="font-size:22px;font-weight:900;color:#059669;margin-bottom:4px;">12</div>
+            <div style="font-size:12px;color:var(--slate);">Transactions</div>
+          </div>
+          <div style="background:#F8FAFC;border-radius:14px;padding:16px;text-align:center;">
+            <div style="font-size:22px;font-weight:900;color:#2563EB;margin-bottom:4px;">204 MAD</div>
+            <div style="font-size:12px;color:var(--slate);">Panier moyen</div>
+          </div>
+        </div>
+        <button class="btn-o" style="width:100%;" onclick="T('📥 Export relevé de compte')">📥 Télécharger le relevé</button>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION NOTIFICATIONS ═══ -->
+    <div class="sec" id="sec-notifs">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔔 Préférences de notifications</span>
+          <button class="btn-p" onclick="sauvegarder('notifications')">💾 Sauvegarder</button>
+        </div>
+        <div id="notifPrefs"></div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION HISTORIQUE ═══ -->
+    <div class="sec" id="sec-historique">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🕐 Historique des activités</span>
+          <button class="btn-o" onclick="T('📥 Export historique')">📥 Export</button>
+        </div>
+        <div id="historiqueList"></div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION CONFIDENTIALITÉ ═══ -->
+    <div class="sec" id="sec-confidentialite">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🛡️ Confidentialité & Données</span>
+          <button class="btn-p" onclick="sauvegarder('confidentialité')">💾 Sauvegarder</button>
+        </div>
+        <div id="privacyPrefs"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title" style="color:#DC2626;">⚠️ Zone de danger</span></div>
+        <div class="danger-zone" id="dangerZone"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<footer>
+  <div class="fbot">
+    <span>© 2025 <b>ServicesPlus</b>. Tous droits réservés.</span>
+    <span>Fait avec ❤️ par le <b>Groupe 18 — UNCHK</b></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════ DONNÉES ════ */
+const COMPLETION = [
+  {lbl:"Photo profil",  done:false, ic:"📸"},
+  {lbl:"Infos perso",   done:true,  ic:"👤"},
+  {lbl:"Téléphone",     done:true,  ic:"📞"},
+  {lbl:"Adresse",       done:true,  ic:"📍"},
+  {lbl:"Bio",           done:false, ic:"✍️"},
+  {lbl:"Paiement",      done:true,  ic:"💳"},
+  {lbl:"Vérification",  done:true,  ic:"✅"},
+  {lbl:"Préférences",   done:false, ic:"⚙️"},
+];
+
+const PAY_METHODS = [
+  {icon:"💳", name:"Carte Visa",      detail:"•••• •••• •••• 4521", expires:"12/27", default:true },
+  {icon:"📱", name:"Orange Money",    detail:"+221 77 000 00 00",    expires:null,    default:false},
+  {icon:"🌊", name:"Wave",            detail:"+221 76 000 00 00",    expires:null,    default:false},
+];
+
+const SEC_OPTIONS = [
+  {title:"Authentification à 2 facteurs", sub:"Protégez votre compte avec un code SMS", on:false},
+  {title:"Alertes de connexion",          sub:"Recevoir un email à chaque connexion",   on:true},
+  {title:"Sessions simultanées",          sub:"Autoriser plusieurs appareils",           on:true},
+];
+
+const SESSIONS = [
+  {device:"Chrome / Windows 11", loc:"Dakar, Sénégal", time:"Maintenant",  current:true},
+  {device:"Safari / iPhone 15",  loc:"Dakar, Sénégal", time:"Il y a 2h",   current:false},
+  {device:"Firefox / Linux",     loc:"Thiès, Sénégal", time:"Il y a 3 jours", current:false},
+];
+
+const NOTIF_PREFS = [
+  {titre:"Réservations",   sub:"Confirmations et rappels",               on:true,  cat:"email"},
+  {titre:"Paiements",      sub:"Confirmations et reçus",                 on:true,  cat:"email"},
+  {titre:"Promotions",     sub:"Offres spéciales et réductions",         on:false, cat:"email"},
+  {titre:"Avis et notes",  sub:"Rappels pour laisser un avis",           on:true,  cat:"email"},
+  {titre:"SMS Réservations",sub:"Rappels par SMS 1h avant",              on:true,  cat:"sms"},
+  {titre:"SMS Urgences",   sub:"Alertes importantes par SMS",            on:true,  cat:"sms"},
+  {titre:"Newletter",      sub:"Actualités ServicesPlus par email",      on:false, cat:"marketing"},
+];
+
+const HISTORIQUE = [
+  {ic:"📅", bg:"#FFF0EB", title:"Réservation confirmée — RES-002",           time:"Il y a 5 min",  detail:"Sara Mansouri • Ménage • 240 MAD"},
+  {ic:"💰", bg:"#ECFDF5", title:"Paiement effectué — 450 MAD",               time:"Il y a 2h",     detail:"RES-001 • Plomberie • Karim Benali"},
+  {ic:"⭐", bg:"#FFFBEB", title:"Avis publié — 5★ pour Karim Benali",        time:"Il y a 1 jour", detail:"Plomberie • Mission terminée"},
+  {ic:"🔧", bg:"#EFF6FF", title:"Intervention terminée — Plomberie",         time:"Il y a 2 jours",detail:"Karim Benali • 3h • 450 MAD"},
+  {ic:"📝", bg:"#F5F3FF", title:"Profil mis à jour",                          time:"Il y a 1 sem.", detail:"Adresse et téléphone modifiés"},
+  {ic:"👤", bg:"#ECFDF5", title:"Compte créé sur ServicesPlus",              time:"Il y a 1 an",   detail:"Bienvenue Mohammed !"},
+];
+
+const PRIVACY = [
+  {titre:"Profil visible publiquement", sub:"Votre nom peut être visible des prestataires", on:true},
+  {titre:"Partage des données d'usage", sub:"Aider à améliorer la plateforme",              on:true},
+  {titre:"Cookies de personnalisation", sub:"Recommandations personnalisées",               on:true},
+  {titre:"Cookies publicitaires",       sub:"Publicités ciblées sur ServicesPlus",          on:false},
+];
+
+const DANGER_ACTIONS = [
+  {title:"Exporter mes données",   sub:"Téléchargez une copie de toutes vos données",     btn:"📥 Exporter",  style:"btn-o",  action:"T('📥 Export en cours de préparation...')"},
+  {title:"Désactiver le compte",   sub:"Votre compte sera désactivé temporairement",       btn:"⏸️ Désactiver", style:"btn-o",  action:"T('⚠️ Confirmation requise par email')"},
+  {title:"Supprimer le compte",    sub:"Cette action est irréversible. Toutes vos données seront effacées.", btn:"🗑️ Supprimer", style:"btn-r", action:"if(confirm('Supprimer définitivement votre compte ?'))T('🗑️ Demande de suppression envoyée')"},
+];
+
+/* ════ INIT ════ */
+window.onload = () => {
+  renderCompletion();
+  renderSecOptions();
+  renderSessions();
+  renderPayMethods();
+  renderNotifPrefs();
+  renderHistorique();
+  renderPrivacy();
+  renderDangerZone();
+};
+
+/* ════ NAVIGATION ════ */
+function goSec(id, btn) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.mi').forEach(m=>m.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ════ COMPLÉTION ════ */
+function renderCompletion() {
+  document.getElementById('completionItems').innerHTML = COMPLETION.map(c=>`
+    <div style="text-align:center;padding:10px;border-radius:12px;background:${c.done?'#ECFDF5':'#F8FAFC'};border:1.5px solid ${c.done?'#A7F3D0':'#E9EEF4'};">
+      <div style="font-size:18px;margin-bottom:4px;">${c.done?'✅':c.ic}</div>
+      <div style="font-size:11px;font-weight:600;color:${c.done?'#059669':'#94A3B8'};">${c.lbl}</div>
+    </div>
+  `).join('');
+}
+
+/* ════ SÉCURITÉ ════ */
+function renderSecOptions() {
+  document.getElementById('secOptions').innerHTML = SEC_OPTIONS.map((s,i)=>`
+    <div class="sec-item">
+      <div><div class="si-title">${s.title}</div><div class="si-sub">${s.sub}</div></div>
+      <div class="sw" id="swo-${i}" onclick="toggleSw('swo-${i}',${i},'sec')" style="background:${s.on?'var(--primary)':'#E2E8F0'}">
+        <div class="sw-dot" style="left:${s.on?23:3}px;"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSessions() {
+  document.getElementById('sessions').innerHTML = SESSIONS.map((s,i)=>`
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #F8FAFC;">
+      <div style="width:42px;height:42px;border-radius:12px;background:${s.current?'#FFF0EB':'#F8FAFC'};display:flex;align-items:center;justify-content:center;font-size:20px;">
+        ${s.device.includes('iPhone')?'📱':s.device.includes('Chrome')?'🖥️':'🌐'}
+      </div>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:13px;">${s.device} ${s.current?'<span style="font-size:10px;background:#ECFDF5;color:#059669;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:6px;">Actuelle</span>':''}</div>
+        <div style="font-size:12px;color:var(--slate);">📍 ${s.loc} • ${s.time}</div>
+      </div>
+      ${!s.current?`<button class="btn-o" style="font-size:12px;padding:6px 12px;color:#DC2626;border-color:#FECACA;" onclick="T('✕ Session déconnectée')">Déconnecter</button>`:''}
+    </div>
+  `).join('');
+}
+
+/* ════ PAIEMENTS ════ */
+function renderPayMethods() {
+  document.getElementById('payMethods').innerHTML = PAY_METHODS.map((p,i)=>`
+    <div class="pay-card ${p.default?'default':''}">
+      <span class="pay-icon">${p.icon}</span>
+      <div style="flex:1;">
+        <div class="pay-name">${p.name} ${p.default?'<span class="badge bg" style="font-size:10px;">Par défaut</span>':''}</div>
+        <div class="pay-detail">${p.detail}${p.expires?` • Exp. ${p.expires}`:''}</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        ${!p.default?`<button class="btn-o" style="font-size:11px;padding:5px 10px;" onclick="setDefault(${i})">Par défaut</button>`:''}
+        <button class="btn-o" style="font-size:11px;padding:5px 10px;color:#DC2626;border-color:#FECACA;" onclick="T('🗑️ Moyen de paiement supprimé')">Supprimer</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setDefault(idx) {
+  PAY_METHODS.forEach((p,i) => p.default = i===idx);
+  renderPayMethods();
+  T('✅ Moyen de paiement par défaut mis à jour');
+}
+
+/* ════ NOTIFS ════ */
+function renderNotifPrefs() {
+  const cats = {email:"📧 Email", sms:"📱 SMS", marketing:"📣 Marketing"};
+  const grouped = {};
+  NOTIF_PREFS.forEach(n => {
+    if(!grouped[n.cat]) grouped[n.cat]=[];
+    grouped[n.cat].push(n);
+  });
+
+  document.getElementById('notifPrefs').innerHTML = Object.entries(grouped).map(([cat,items])=>`
+    <div style="margin-bottom:20px;">
+      <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:var(--slate);">${cats[cat]||cat}</div>
+      ${items.map((n,i)=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #F8FAFC;">
+          <div><div style="font-weight:700;font-size:14px;">${n.titre}</div><div style="font-size:12px;color:var(--slate);">${n.sub}</div></div>
+          <div class="sw" id="swn-${cat}-${i}" onclick="toggleSwN('${cat}',${i})" style="background:${n.on?'var(--primary)':'#E2E8F0'}">
+            <div class="sw-dot" style="left:${n.on?23:3}px;"></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function toggleSwN(cat, i) {
+  const items = NOTIF_PREFS.filter(n=>n.cat===cat);
+  items[i].on = !items[i].on;
+  renderNotifPrefs();
+}
+
+/* ════ HISTORIQUE ════ */
+function renderHistorique() {
+  document.getElementById('historiqueList').innerHTML = HISTORIQUE.map(h=>`
+    <div class="hist-row">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <div class="hist-icon" style="background:${h.bg}">${h.ic}</div>
+        <div>
+          <div style="font-weight:700;font-size:14px;">${h.title}</div>
+          <div style="font-size:12px;color:var(--slate);">${h.detail}</div>
+        </div>
+      </div>
+      <span style="font-size:11px;color:#94A3B8;white-space:nowrap;">${h.time}</span>
+    </div>
+  `).join('');
+}
+
+/* ════ PRIVACY ════ */
+function renderPrivacy() {
+  document.getElementById('privacyPrefs').innerHTML = PRIVACY.map((p,i)=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #F8FAFC;">
+      <div><div style="font-weight:700;font-size:14px;">${p.titre}</div><div style="font-size:12px;color:var(--slate);">${p.sub}</div></div>
+      <div class="sw" id="swp-${i}" onclick="toggleSwP(${i})" style="background:${p.on?'var(--primary)':'#E2E8F0'}">
+        <div class="sw-dot" style="left:${p.on?23:3}px;"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSwP(i) {
+  PRIVACY[i].on = !PRIVACY[i].on;
+  renderPrivacy();
+}
+
+/* ════ DANGER ZONE ════ */
+function renderDangerZone() {
+  document.getElementById('dangerZone').innerHTML = DANGER_ACTIONS.map(d=>`
+    <div class="dz-item">
+      <div><div style="font-weight:700;font-size:14px;">${d.title}</div><div style="font-size:12px;color:var(--slate);">${d.sub}</div></div>
+      <button class="${d.style}" onclick="${d.action}" style="${d.style==='btn-r'?'':''}font-size:12px;padding:7px 14px;white-space:nowrap;">${d.btn}</button>
+    </div>
+  `).join('');
+}
+
+/* ════ UTILS ════ */
+function toggleSw(id, i, type) {
+  const el  = document.getElementById(id);
+  const dot = el.querySelector('.sw-dot');
+  const isOn= dot.style.left !== '3px';
+  dot.style.left = isOn ? '3px' : '23px';
+  el.style.background = isOn ? '#E2E8F0' : 'var(--primary)';
+}
+
+function toggleP(id, btn) {
+  const input = document.getElementById(id);
+  const vis   = input.type === 'text';
+  input.type  = vis ? 'password' : 'text';
+  btn.textContent = vis ? '👁️' : '🙈';
+}
+
+function checkStr(val) {
+  let s=0;
+  if(val.length>=8) s++;
+  if(/[A-Z]/.test(val)) s++;
+  if(/[0-9]/.test(val)) s++;
+  if(/[^A-Za-z0-9]/.test(val)) s++;
+  const lvls=[{w:0,c:'#E9EEF4',t:''},{w:25,c:'#DC2626',t:'Faible'},{w:50,c:'#D97706',t:'Moyen'},{w:75,c:'#2563EB',t:'Bon'},{w:100,c:'#059669',t:'Excellent'}];
+  const l=lvls[s]||lvls[0];
+  document.getElementById('str-fill').style.cssText=`width:${l.w}%;background:${l.c}`;
+  const st=document.getElementById('str-text'); st.textContent=l.t; st.style.color=l.c;
+}
+
+function sauvegarder(section) {
+  T('✅ ' + section.charAt(0).toUpperCase() + section.slice(1) + ' sauvegardé avec succès !');
+}
+
+function resetForm() {
+  T('↩️ Modifications annulées');
+}
+
+function T(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+
+<script>
+window.addEventListener('DOMContentLoaded', async () => {
+  const user = Auth.getUser();
+  if (!user) { location.href = '08_connexion.html'; return; }
+
+  // Pré-remplir les champs du profil
+  const fields = { 'f-prenom': user.prenom, 'f-nom': user.nom, 'f-email': user.email,
+                   'f-tel': user.telephone || '', 'f-ville': user.ville || '' };
+  Object.entries(fields).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  });
+});
+
+async function sauvegarderProfil() {
+  const user = Auth.getUser();
+  if (!user) return;
+  // Mise à jour du localStorage immédiatement
+  user.prenom = document.getElementById('f-prenom')?.value || user.prenom;
+  user.nom    = document.getElementById('f-nom')?.value    || user.nom;
+  user.ville  = document.getElementById('f-ville')?.value  || user.ville;
+  Auth.setUser(user);
+  // Toast succès
+  const t = document.getElementById('toast');
+  if (t) { t.textContent = '✅ Profil mis à jour !'; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ServicesPlus – Connexion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#E85D26;--pl:#FFF0EB;--gold:#F59E0B;--dark:#0F172A;--slate:#64748B;--border:#E9EEF4;--bg:#F6F8FB;--green:#059669;--blue:#2563EB}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;display:flex;flex-direction:column}
+
+    /* NAV */
+    nav{background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:66px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 3px 10px rgba(232,93,38,0.3)}
+    .logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:900}
+    .logo-text span:first-child{color:var(--primary)}
+    .logo-text span:last-child{color:var(--dark)}
+    .nav-r{margin-left:auto;display:flex;gap:10px;align-items:center}
+    .btn-back{padding:8px 18px;background:transparent;color:var(--slate);border:1.5px solid var(--border);border-radius:10px;font-weight:600;cursor:pointer;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+    .btn-back:hover{border-color:var(--primary);color:var(--primary)}
+
+    /* LAYOUT PRINCIPAL */
+    .main{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 66px)}
+
+    /* CÔTÉ GAUCHE – ILLUSTRATION */
+    .left-panel{background:linear-gradient(145deg,#1A3560 0%,#2563EB 50%,#E85D26 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 48px}
+    .left-panel::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px);background-size:28px 28px}
+    .left-content{position:relative;text-align:center;color:white}
+    .left-logo{font-size:64px;margin-bottom:24px;display:block}
+    .left-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;margin-bottom:14px;line-height:1.2}
+    .left-title em{color:#FCD34D;font-style:normal}
+    .left-sub{color:rgba(255,255,255,0.75);font-size:15px;line-height:1.8;margin-bottom:36px}
+
+    /* STATS PANEL GAUCHE */
+    .left-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:340px}
+    .stat-box{background:rgba(255,255,255,0.12);border-radius:16px;padding:16px;text-align:center;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2)}
+    .stat-val{font-size:22px;font-weight:900;margin-bottom:3px}
+    .stat-lbl{font-size:11px;color:rgba(255,255,255,0.7);font-weight:600}
+
+    /* TÉMOIGNAGE */
+    .testimonial{margin-top:32px;background:rgba(255,255,255,0.1);border-radius:16px;padding:20px 24px;max-width:380px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15)}
+    .test-text{font-size:14px;color:rgba(255,255,255,0.9);font-style:italic;line-height:1.7;margin-bottom:12px}
+    .test-author{display:flex;align-items:center;gap:10px}
+    .test-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px}
+    .test-name{font-size:13px;font-weight:700;color:white}
+    .test-role{font-size:11px;color:rgba(255,255,255,0.6)}
+
+    /* CÔTÉ DROIT – FORMULAIRE */
+    .right-panel{display:flex;align-items:center;justify-content:center;padding:60px 40px;background:white}
+    .form-wrap{width:100%;max-width:420px}
+
+    .form-header{text-align:center;margin-bottom:32px}
+    .form-icon{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px;box-shadow:0 8px 24px rgba(232,93,38,0.3)}
+    .form-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;margin-bottom:6px}
+    .form-sub{color:var(--slate);font-size:14px}
+
+    /* TABS TYPE COMPTE */
+    .role-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:28px;background:#F8FAFC;border-radius:14px;padding:6px}
+    .role-tab{padding:10px 0;border-radius:10px;border:none;cursor:pointer;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;background:transparent;color:var(--slate);transition:all .2s;text-align:center}
+    .role-tab.active{background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;box-shadow:0 4px 12px rgba(232,93,38,0.25)}
+
+    /* FORMULAIRE */
+    .form-group{margin-bottom:18px}
+    .form-label{display:block;font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+    .input-wrap{position:relative}
+    .form-input{width:100%;padding:13px 16px 13px 44px;border-radius:12px;border:1.5px solid var(--border);font-size:14px;font-family:'Inter',sans-serif;color:var(--dark);outline:none;transition:all .15s;background:white}
+    .form-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(232,93,38,.1)}
+    .form-input.error{border-color:#DC2626;box-shadow:0 0 0 3px rgba(220,38,38,.1)}
+    .form-input.success{border-color:#059669;box-shadow:0 0 0 3px rgba(5,150,105,.1)}
+    .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none}
+    .input-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;background:none;border:none;color:var(--slate)}
+    .error-msg{font-size:12px;color:#DC2626;margin-top:5px;display:none}
+    .error-msg.show{display:block}
+
+    /* REMEMBER + FORGOT */
+    .form-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+    .checkbox-wrap{display:flex;align-items:center;gap:8px;cursor:pointer}
+    .checkbox-wrap input{width:17px;height:17px;accent-color:var(--primary);cursor:pointer}
+    .checkbox-wrap span{font-size:13px;color:var(--slate);font-weight:500}
+    .forgot-link{font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;cursor:pointer}
+    .forgot-link:hover{text-decoration:underline}
+
+    /* BOUTON CONNEXION */
+    .btn-login{width:100%;padding:15px 0;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:13px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(232,93,38,0.3);margin-bottom:16px}
+    .btn-login:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,93,38,0.4)}
+    .btn-login:active{transform:translateY(0)}
+    .btn-login.loading{opacity:.8;cursor:not-allowed}
+
+    /* SÉPARATEUR */
+    .separator{position:relative;margin:20px 0}
+    .separator::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border)}
+    .sep-text{position:relative;background:white;padding:0 14px;font-size:12px;color:#94A3B8;display:block;text-align:center;width:fit-content;margin:0 auto}
+
+    /* BOUTONS SOCIAUX */
+    .social-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+    .social-btn{padding:12px 0;border-radius:12px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;color:var(--dark);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
+    .social-btn:hover{border-color:var(--primary);background:var(--pl)}
+
+    /* INSCRIPTION LINK */
+    .register-link{text-align:center;font-size:14px;color:var(--slate)}
+    .register-link a{color:var(--primary);font-weight:700;text-decoration:none}
+    .register-link a:hover{text-decoration:underline}
+
+    /* ALERT SUCCESS */
+    .alert{padding:13px 16px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:18px;display:none;align-items:center;gap:10px}
+    .alert.show{display:flex}
+    .alert.success{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0}
+    .alert.error{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}
+    .alert.info{background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
+
+    /* MOT DE PASSE OUBLIÉ PANEL */
+    .forgot-panel{display:none}
+    .forgot-panel.show{display:block}
+    .main-form{display:block}
+    .main-form.hide{display:none}
+
+    /* FOOTER */
+    footer{background:#0F172A;color:#94A3B8;padding:20px 40px;text-align:center;font-size:12px}
+    footer b{color:var(--primary)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;color:white;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .3s;opacity:0;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .main{grid-template-columns:1fr}
+      .left-panel{display:none}
+      .right-panel{padding:40px 24px}
+    }
+  </style>
+  <script src="api.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="01_accueil.html" class="logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-text"><span>Services</span><span>Plus</span></div>
+  </a>
+  <div class="nav-r">
+    <a href="01_accueil.html" class="btn-back">← Retour à l'accueil</a>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- ══ PANNEAU GAUCHE ══ -->
+  <div class="left-panel">
+    <div class="left-content">
+      <span class="left-logo">🏠</span>
+      <h1 class="left-title">Bienvenue sur<br/><em>ServicesPlus</em></h1>
+      <p class="left-sub">La plateforme N°1 au Sénégal pour trouver<br/>des professionnels qualifiés près de chez vous.</p>
+
+      <div class="left-stats">
+        <div class="stat-box">
+          <div class="stat-val">2 400+</div>
+          <div class="stat-lbl">Prestataires</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">18 500+</div>
+          <div class="stat-lbl">Clients satisfaits</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">4.8 ★</div>
+          <div class="stat-lbl">Note moyenne</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">15 000+</div>
+          <div class="stat-lbl">Missions réalisées</div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <p class="test-text">"ServicesPlus m'a permis de trouver un plombier en moins de 30 minutes. Service impeccable, je recommande !"</p>
+        <div class="test-author">
+          <div class="test-av">M</div>
+          <div>
+            <div class="test-name">Mohammed Dia</div>
+            <div class="test-role">Client — Dakar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANNEAU DROIT – FORMULAIRE ══ -->
+  <div class="right-panel">
+    <div class="form-wrap">
+
+      <div class="form-header">
+        <div class="form-icon">🔐</div>
+        <h2 class="form-title">Se connecter</h2>
+        <p class="form-sub">Accédez à votre espace personnel</p>
+      </div>
+
+      <!-- TABS RÔLE -->
+      <div class="role-tabs">
+        <button class="role-tab active" onclick="setRole('client',this)">👤 Client</button>
+        <button class="role-tab" onclick="setRole('prestataire',this)">🔧 Prestataire</button>
+        <button class="role-tab" onclick="setRole('admin',this)">🛡️ Admin</button>
+      </div>
+
+      <!-- ALERTE -->
+      <div class="alert info show" id="alertInfo">
+        ℹ️ <span id="alertInfoMsg">Connectez-vous en tant que Client pour tester.</span>
+      </div>
+      <div class="alert error" id="alertError">❌ <span id="alertErrMsg">Email ou mot de passe incorrect.</span></div>
+      <div class="alert success" id="alertSuccess">✅ <span id="alertSuccessMsg">Connexion réussie ! Redirection...</span></div>
+
+      <!-- FORMULAIRE PRINCIPAL -->
+      <div class="main-form" id="mainForm">
+        <div class="form-group">
+          <label class="form-label">Adresse email</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" class="form-input" id="emailInput" placeholder="votre@email.com" oninput="clearErrors()"/>
+          </div>
+          <div class="error-msg" id="emailError">Veuillez entrer une adresse email valide.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" class="form-input" id="passInput" placeholder="••••••••" oninput="clearErrors()" onkeydown="if(event.key==='Enter') login()"/>
+            <button class="input-toggle" onclick="togglePass()" id="passToggle">👁️</button>
+          </div>
+          <div class="error-msg" id="passError">Le mot de passe doit contenir au moins 6 caractères.</div>
+        </div>
+
+        <div class="form-row">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="rememberMe" checked/>
+            <span>Se souvenir de moi</span>
+          </label>
+          <a class="forgot-link" onclick="showForgot()">Mot de passe oublié ?</a>
+        </div>
+
+        <button class="btn-login" id="loginBtn" onclick="login()">
+          Se connecter →
+        </button>
+
+        <div class="separator"><span class="sep-text">ou continuer avec</span></div>
+
+        <div class="social-btns">
+          <button class="social-btn" onclick="socialLogin('Orange Money')">📱 Orange Money</button>
+          <button class="social-btn" onclick="socialLogin('Wave')">🌊 Wave</button>
+        </div>
+
+        <div class="register-link">
+          Pas encore de compte ?
+          <a href="11_inscription.html">S'inscrire gratuitement →</a>
+        </div>
+      </div>
+
+      <!-- PANNEAU MOT DE PASSE OUBLIÉ -->
+      <div class="forgot-panel" id="forgotPanel">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="font-size:48px;margin-bottom:12px;">🔑</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;margin-bottom:6px;">Mot de passe oublié ?</h3>
+          <p style="color:var(--slate);font-size:14px;">Entrez votre email pour recevoir un lien de réinitialisation.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Adresse email</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" class="form-input" id="forgotEmail" placeholder="votre@email.com"/>
+          </div>
+        </div>
+
+        <button class="btn-login" onclick="sendReset()">📧 Envoyer le lien de réinitialisation</button>
+
+        <div style="text-align:center;margin-top:16px;">
+          <a class="forgot-link" onclick="hideForgot()">← Retour à la connexion</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 <b>ServicesPlus</b>. Tous droits réservés. — Fait par le <b>Groupe 18 — UNCHK</b></span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ════ RÔLES ════ */
+  const ROLES = {
+    client:       { dest:'05_dashboard_client.html',        msg:'Mode Client activé — Connectez-vous pour accéder à votre espace.',         demo:'m.dia@email.com' },
+    prestataire:  { dest:'06_dashboard_prestataire.html',   msg:'Mode Prestataire activé — Accédez à votre espace professionnel.',          demo:'k.benali@email.com' },
+    admin:        { dest:'07_admin.html',                   msg:'Mode Admin activé — Accès restreint aux administrateurs.',                  demo:'admin@servicesplus.sn' },
+  };
+
+  let roleActif = 'client';
+  let passVisible = false;
+
+  /* ════ CHANGER RÔLE ════ */
+  function setRole(role, btn) {
+    roleActif = role;
+    document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    const r = ROLES[role];
+    document.getElementById('alertInfo').classList.add('show');
+    document.getElementById('alertInfoMsg').textContent = r.msg;
+    document.getElementById('emailInput').value = r.demo;
+    clearErrors();
+    hideAlerts(['error','success']);
+  }
+
+  /* ════ CONNEXION ════ */
+  async function login() {
+    const email = document.getElementById('emailInput').value.trim();
+    const pass  = document.getElementById('passInput').value.trim();
+    let valid = true;
+
+    if (!email || !email.includes('@')) {
+      document.getElementById('emailInput').classList.add('error');
+      document.getElementById('emailError').classList.add('show');
+      valid = false;
+    }
+    if (!pass || pass.length < 6) {
+      document.getElementById('passInput').classList.add('error');
+      document.getElementById('passError').classList.add('show');
+      valid = false;
+    }
+    if (!valid) return;
+
+    const btn = document.getElementById('loginBtn');
+    btn.textContent = '⏳ Connexion en cours...';
+    btn.classList.add('loading');
+    btn.disabled = true;
+    hideAlerts(['error','info']);
+
+    const data = await apiFetch('auth.php?action=login', 'POST', { email, password: pass });
+
+    btn.textContent = 'Se connecter →';
+    btn.classList.remove('loading');
+    btn.disabled = false;
+
+    if (data.success) {
+      Auth.setUser(data.data.user);
+      document.getElementById('emailInput').classList.add('success');
+      document.getElementById('passInput').classList.add('success');
+      document.getElementById('alertSuccess').classList.add('show');
+      document.getElementById('alertSuccessMsg').textContent = 'Connexion réussie ! Redirection...';
+      T('✅ Connexion réussie !');
+      setTimeout(() => { location.href = data.data.redirect; }, 1200);
+    } else {
+      document.getElementById('alertErrMsg').textContent = data.message;
+      document.getElementById('alertError').classList.add('show');
+      T('❌ ' + data.message);
+    }
+  }
+
+  /* ════ MOT DE PASSE ════ */
+  function togglePass() {
+    passVisible = !passVisible;
+    const input = document.getElementById('passInput');
+    const btn   = document.getElementById('passToggle');
+    input.type  = passVisible ? 'text' : 'password';
+    btn.textContent = passVisible ? '🙈' : '👁️';
+  }
+
+  /* ════ MOT DE PASSE OUBLIÉ ════ */
+  function showForgot() {
+    document.getElementById('mainForm').classList.add('hide');
+    document.getElementById('forgotPanel').classList.add('show');
+    document.getElementById('alertInfo').classList.remove('show');
+    hideAlerts(['error','success']);
+  }
+
+  function hideForgot() {
+    document.getElementById('mainForm').classList.remove('hide');
+    document.getElementById('forgotPanel').classList.remove('show');
+    document.getElementById('alertInfo').classList.add('show');
+  }
+
+  function sendReset() {
+    const email = document.getElementById('forgotEmail').value.trim();
+    if (!email || !email.includes('@')) {
+      T('⚠️ Veuillez entrer une adresse email valide.');
+      return;
+    }
+    T('📧 Lien de réinitialisation envoyé à ' + email);
+    setTimeout(() => hideForgot(), 1500);
+  }
+
+  /* ════ CONNEXION SOCIALE ════ */
+  function socialLogin(method) {
+    T('⚠️ Connexion ' + method + ' — Utilisez email/mot de passe.');
+  }
+
+  /* ════ UTILS ════ */
+  function clearErrors() {
+    ['emailInput','passInput'].forEach(id => {
+      document.getElementById(id).classList.remove('error','success');
+    });
+    document.getElementById('emailError').classList.remove('show');
+    document.getElementById('passError').classList.remove('show');
+    hideAlerts(['error','success']);
+  }
+
+  function hideAlerts(types) {
+    types.forEach(t => document.getElementById('alert'+t.charAt(0).toUpperCase()+t.slice(1))?.classList.remove('show'));
+  }
+
+  function T(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>

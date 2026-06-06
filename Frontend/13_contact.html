@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ServicesPlus – Contact</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#E85D26;--pl:#FFF0EB;--gold:#F59E0B;--dark:#0F172A;--slate:#64748B;--border:#E9EEF4;--bg:#F6F8FB;--green:#059669;--blue:#2563EB}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark)}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:999;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:66px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:24px}
+    .logo-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:19px}
+    .logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:900}
+    .logo-text span:first-child{color:var(--primary)}
+    .logo-text span:last-child{color:var(--dark)}
+    .nav-links{display:flex;gap:4px;flex:1}
+    .nl{padding:7px 14px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;background:transparent;color:var(--slate);text-decoration:none;display:inline-flex;align-items:center;transition:all .15s}
+    .nl:hover,.nl.active{background:var(--pl);color:var(--primary)}
+    .nav-r{display:flex;gap:10px;padding-left:16px;border-left:1px solid var(--border)}
+    .btn-ln{padding:8px 18px;background:transparent;color:var(--slate);border:1.5px solid var(--border);border-radius:10px;font-weight:600;cursor:pointer;font-size:13px;transition:all .15s}
+    .btn-ln:hover{border-color:var(--primary);color:var(--primary)}
+    .btn-rg{padding:8px 18px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
+
+    /* HERO */
+    .hero{background:linear-gradient(130deg,#1A3560 0%,#2563EB 50%,#E85D26 100%);padding:64px 40px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px);background-size:26px 26px}
+    .hero-inner{position:relative;max-width:620px;margin:0 auto}
+    .hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.13);border-radius:20px;padding:6px 18px;margin-bottom:20px}
+    .hero-badge span{color:rgba(255,255,255,0.9);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+    .hero h1{font-family:'Playfair Display',serif;color:white;font-size:42px;font-weight:900;margin-bottom:14px;line-height:1.15}
+    .hero h1 em{color:#FCD34D;font-style:normal}
+    .hero p{color:rgba(255,255,255,0.78);font-size:15px;line-height:1.75;margin-bottom:28px}
+    .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .btn-white{padding:12px 24px;background:white;color:var(--primary);border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px;transition:all .2s}
+    .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+    .btn-ghost{padding:12px 24px;background:transparent;color:white;border:2px solid rgba(255,255,255,0.4);border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;transition:all .15s}
+    .btn-ghost:hover{border-color:white}
+
+    /* CANAUX */
+    .channels{background:white;border-bottom:1px solid var(--border);padding:0 40px}
+    .channels-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+    .channel{padding:24px 20px;text-align:center;border-right:1px solid var(--border);cursor:pointer;transition:all .2s;position:relative}
+    .channel:last-child{border-right:none}
+    .channel:hover{background:var(--pl)}
+    .channel:hover .ch-icon{transform:scale(1.1)}
+    .channel::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:transparent;transition:background .2s}
+    .channel:hover::after,.channel.active::after{background:linear-gradient(to right,#E85D26,#F59E0B)}
+    .ch-icon{font-size:32px;margin-bottom:10px;transition:transform .2s}
+    .ch-title{font-weight:800;font-size:15px;margin-bottom:4px}
+    .ch-sub{font-size:12px;color:var(--slate);margin-bottom:8px;line-height:1.5}
+    .ch-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+    .ch-badge.green{color:var(--green);background:#ECFDF5}
+    .ch-badge.blue{color:var(--blue);background:#EFF6FF}
+    .ch-badge.orange{color:#D97706;background:#FFFBEB}
+    .ch-badge.gray{color:var(--slate);background:#F1F5F9}
+
+    /* LAYOUT */
+    .container{max-width:1100px;margin:0 auto;padding:40px 20px}
+    .layout{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
+
+    /* CARD */
+    .card{background:white;border-radius:18px;padding:28px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,0.05);margin-bottom:18px}
+    .card-title{font-weight:800;font-size:18px;margin-bottom:6px}
+    .card-sub{color:var(--slate);font-size:14px;margin-bottom:24px}
+
+    /* FORM */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .fg{display:flex;flex-direction:column;gap:7px}
+    .fg.full{grid-column:1/-1}
+    .fl{font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px}
+    .iw{position:relative}
+    .fi{width:100%;padding:12px 16px 12px 44px;border-radius:11px;border:1.5px solid var(--border);font-size:14px;font-family:'Inter',sans-serif;color:var(--dark);outline:none;transition:all .15s}
+    .fi:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(232,93,38,.1)}
+    .fi.no-ic{padding-left:16px}
+    .fi-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+    textarea.fi{padding:12px 16px;resize:vertical;min-height:120px}
+    .fi-select{width:100%;padding:12px 16px;border-radius:11px;border:1.5px solid var(--border);font-size:14px;font-family:'Inter',sans-serif;color:var(--dark);outline:none;background:white;cursor:pointer;transition:all .15s}
+    .fi-select:focus{border-color:var(--primary)}
+
+    /* PRIORITÉ */
+    .priority-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+    .prio-btn{padding:10px;border-radius:10px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;transition:all .15s}
+    .prio-btn:hover{border-color:var(--primary)}
+    .prio-btn.selected{border-color:var(--primary);background:var(--pl);color:var(--primary)}
+    .prio-btn.urgent.selected{border-color:#DC2626;background:#FEF2F2;color:#DC2626}
+    .prio-btn.normal.selected{border-color:var(--primary);background:var(--pl);color:var(--primary)}
+    .prio-btn.low.selected{border-color:#059669;background:#ECFDF5;color:#059669}
+
+    /* PIÈCES JOINTES */
+    .attach-zone{border:2px dashed var(--border);border-radius:14px;padding:22px;text-align:center;cursor:pointer;transition:all .2s}
+    .attach-zone:hover{border-color:var(--primary);background:var(--pl)}
+    .attach-icon{font-size:32px;margin-bottom:8px}
+    .attach-title{font-weight:700;font-size:14px;margin-bottom:4px}
+    .attach-sub{font-size:12px;color:var(--slate)}
+
+    /* SATISFACTION */
+    .satis-stars{display:flex;gap:8px;justify-content:center;margin:14px 0}
+    .star-btn{font-size:32px;cursor:pointer;filter:grayscale(1);opacity:.4;transition:all .15s}
+    .star-btn:hover,.star-btn.active{filter:none;opacity:1;transform:scale(1.15)}
+
+    /* BOUTON ENVOYER */
+    .btn-submit{width:100%;padding:15px 0;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:13px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(232,93,38,0.3);margin-top:8px}
+    .btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,93,38,0.4)}
+    .btn-submit:active{transform:translateY(0)}
+
+    /* SUCCÈS */
+    .success-wrap{text-align:center;padding:28px 0;display:none}
+    .success-icon{width:80px;height:80px;border-radius:24px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 18px}
+    .success-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#059669;margin-bottom:8px}
+    .success-sub{color:var(--slate);font-size:14px;line-height:1.75;margin-bottom:24px}
+    .success-ref{background:#F8FAFC;border-radius:12px;padding:14px 18px;font-size:13px;font-weight:700;color:var(--primary);margin-bottom:20px}
+
+    /* SIDEBAR DROITE */
+    .info-card{background:white;border-radius:18px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,0.05);overflow:hidden;margin-bottom:16px}
+    .ic-header{padding:18px 22px;background:linear-gradient(135deg,#1A3560,#2563EB);color:white}
+    .ic-header-title{font-weight:800;font-size:16px;margin-bottom:4px}
+    .ic-header-sub{font-size:12px;color:rgba(255,255,255,0.75)}
+    .ic-body{padding:18px 22px}
+    .contact-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+    .contact-row:last-child{margin-bottom:0}
+    .cr-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .cr-label{font-size:11px;color:#94A3B8;margin-bottom:2px}
+    .cr-value{font-size:14px;font-weight:700}
+    .cr-sub{font-size:12px;color:var(--slate);margin-top:1px}
+
+    /* HORAIRES */
+    .horaire-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F8FAFC;font-size:13px}
+    .horaire-row:last-child{border-bottom:none}
+    .horaire-jour{font-weight:600}
+    .horaire-heure{font-weight:700}
+    .horaire-heure.ouvert{color:var(--green)}
+    .horaire-heure.ferme{color:#94A3B8}
+
+    /* CARTE MAP STYLISÉE */
+    .map-card{background:white;border-radius:18px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,0.05);overflow:hidden;margin-bottom:16px}
+    .map-placeholder{height:200px;background:linear-gradient(135deg,#DBEAFE,#EFF6FF);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+    .map-placeholder:hover{background:linear-gradient(135deg,#BFDBFE,#DBEAFE)}
+    .map-pin{font-size:48px;margin-bottom:10px;animation:bounce 1.5s infinite}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .map-addr{font-weight:700;font-size:14px;color:var(--blue)}
+    .map-sub{font-size:12px;color:var(--slate);margin-top:4px}
+    .map-body{padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+
+    /* ÉQUIPE */
+    .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+    .team-card{background:#F8FAFC;border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center;border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
+    .team-card:hover{border-color:var(--primary);background:var(--pl)}
+    .team-av{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .team-name{font-weight:700;font-size:13px}
+    .team-role{font-size:11px;color:var(--slate)}
+
+    /* FAQ RAPIDE */
+    .faq-mini{padding:12px 0;border-bottom:1px solid #F8FAFC;cursor:pointer}
+    .faq-mini:last-child{border-bottom:none}
+    .faq-mini:hover .faq-mini-q{color:var(--primary)}
+    .faq-mini-q{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px;transition:color .15s}
+    .faq-mini-sub{font-size:11px;color:#94A3B8}
+
+    /* RÉSEAUX */
+    .social-grid{display:flex;gap:10px;margin-top:4px}
+    .soc-btn{flex:1;padding:10px 0;border-radius:12px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;transition:all .15s}
+    .soc-btn:hover{border-color:var(--primary);background:var(--pl);color:var(--primary)}
+
+    /* FOOTER */
+    footer{background:#0F172A;color:#94A3B8;padding:40px 40px 24px}
+    .footer-inner{max-width:1100px;margin:0 auto}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:28px}
+    .fl-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .fl-ic{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:18px}
+    .fl-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:white}
+    .fl-text span{color:var(--primary)}
+    .fc h4{color:white;font-weight:800;font-size:14px;margin-bottom:14px}
+    .fc ul{list-style:none}
+    .fc ul li{margin-bottom:9px;font-size:13px;cursor:pointer;transition:color .15s}
+    .fc ul li:hover{color:white}
+    .footer-bottom{border-top:1px solid #1E293B;padding-top:20px;display:flex;justify-content:space-between;font-size:12px}
+    .footer-bottom b{color:var(--primary)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;color:white;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .3s;opacity:0;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
+  <script src="api.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="01_accueil.html" class="logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-text"><span>Services</span><span>Plus</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="01_accueil.html"          class="nl">Accueil</a>
+    <a href="02_recherche.html"        class="nl">Recherche</a>
+    <a href="04_reservation.html"      class="nl">Réservation</a>
+    <a href="05_dashboard_client.html" class="nl">Dashboard</a>
+    <a href="12_faq.html"              class="nl">FAQ</a>
+    <a href="13_contact.html"          class="nl active">Contact</a>
+  </div>
+  <div class="nav-r">
+    <button class="btn-ln" onclick="location.href='08_connexion.html'">Connexion</button>
+    <button class="btn-rg" onclick="location.href='09_inscription.html'">S'inscrire</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span>💬 Support ServicesPlus</span></div>
+    <h1>Nous sommes là<br/><em>pour vous aider</em></h1>
+    <p>Notre équipe support est disponible 7j/7 de 8h à 20h.<br/>Choisissez le canal qui vous convient le mieux.</p>
+    <div class="hero-btns">
+      <button class="btn-white" onclick="document.getElementById('formSection').scrollIntoView({behavior:'smooth'})">✉️ Envoyer un message</button>
+      <button class="btn-ghost" onclick="T('💬 Chat en cours d\'ouverture...')">💬 Chat en direct</button>
+      <button class="btn-ghost" onclick="T('📞 +221 33 000 00 00')">📞 Appeler</button>
+    </div>
+  </div>
+</div>
+
+<!-- CANAUX DE CONTACT -->
+<div class="channels">
+  <div class="channels-inner">
+    <div class="channel active" onclick="selectChannel(this,'chat')">
+      <div class="ch-icon">💬</div>
+      <div class="ch-title">Chat en direct</div>
+      <div class="ch-sub">Réponse instantanée avec un agent</div>
+      <span class="ch-badge green">● En ligne</span>
+    </div>
+    <div class="channel" onclick="selectChannel(this,'email')">
+      <div class="ch-icon">📧</div>
+      <div class="ch-title">Email</div>
+      <div class="ch-sub">Réponse sous 2h en jours ouvrés</div>
+      <span class="ch-badge blue">Rapide</span>
+    </div>
+    <div class="channel" onclick="selectChannel(this,'phone')">
+      <div class="ch-icon">📞</div>
+      <div class="ch-title">Téléphone</div>
+      <div class="ch-sub">+221 33 000 00 00</div>
+      <span class="ch-badge orange">Lun-Sam 8h-20h</span>
+    </div>
+    <div class="channel" onclick="selectChannel(this,'faq')">
+      <div class="ch-icon">❓</div>
+      <div class="ch-title">FAQ</div>
+      <div class="ch-sub">60+ questions déjà répondues</div>
+      <span class="ch-badge gray">Self-service</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="layout">
+
+    <!-- ══ FORMULAIRE ══ -->
+    <div id="formSection">
+
+      <!-- FORMULAIRE PRINCIPAL -->
+      <div class="card" id="contactCard">
+        <div class="card-title">✉️ Envoyer un message</div>
+        <div class="card-sub">Remplissez le formulaire et notre équipe vous répond sous 2h.</div>
+
+        <!-- FORMULAIRE -->
+        <div id="formWrap">
+          <div class="form-grid">
+
+            <div class="fg">
+              <label class="fl">Prénom *</label>
+              <div class="iw"><span class="fi-ic">👤</span><input type="text" class="fi" id="c-prenom" placeholder="Mohammed"/></div>
+            </div>
+            <div class="fg">
+              <label class="fl">Nom *</label>
+              <div class="iw"><span class="fi-ic">👤</span><input type="text" class="fi" id="c-nom" placeholder="Dia"/></div>
+            </div>
+            <div class="fg">
+              <label class="fl">Email *</label>
+              <div class="iw"><span class="fi-ic">📧</span><input type="email" class="fi" id="c-email" placeholder="votre@email.com"/></div>
+            </div>
+            <div class="fg">
+              <label class="fl">Téléphone</label>
+              <div class="iw"><span class="fi-ic">📞</span><input type="tel" class="fi" id="c-phone" placeholder="+221 77 000 00 00"/></div>
+            </div>
+            <div class="fg full">
+              <label class="fl">Sujet *</label>
+              <select class="fi-select" id="c-sujet">
+                <option value="">Sélectionnez un sujet</option>
+                <optgroup label="Réservations">
+                  <option>Problème avec une réservation</option>
+                  <option>Annulation de réservation</option>
+                  <option>Modification de réservation</option>
+                </optgroup>
+                <optgroup label="Paiements">
+                  <option>Problème de paiement</option>
+                  <option>Demande de remboursement</option>
+                  <option>Facture manquante</option>
+                </optgroup>
+                <optgroup label="Compte">
+                  <option>Problème de connexion</option>
+                  <option>Modification du profil</option>
+                  <option>Suppression de compte</option>
+                </optgroup>
+                <optgroup label="Prestataires">
+                  <option>Signaler un prestataire</option>
+                  <option>Devenir prestataire</option>
+                  <option>Litige avec un prestataire</option>
+                </optgroup>
+                <optgroup label="Autre">
+                  <option>Suggestion d'amélioration</option>
+                  <option>Partenariat commercial</option>
+                  <option>Autre question</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="fg full">
+              <label class="fl">Priorité</label>
+              <div class="priority-grid">
+                <div class="prio-btn urgent" onclick="setPrio('urgent',this)">🔴 Urgent</div>
+                <div class="prio-btn normal selected" onclick="setPrio('normal',this)">🟡 Normal</div>
+                <div class="prio-btn low" onclick="setPrio('low',this)">🟢 Faible</div>
+              </div>
+            </div>
+
+            <div class="fg full">
+              <label class="fl">Numéro de réservation (si applicable)</label>
+              <div class="iw"><span class="fi-ic">🔢</span><input type="text" class="fi" id="c-resnum" placeholder="Ex: RES-2025-0847"/></div>
+            </div>
+
+            <div class="fg full">
+              <label class="fl">Votre message *</label>
+              <textarea class="fi no-ic" id="c-message" rows="5" placeholder="Décrivez votre problème ou question en détail..."></textarea>
+              <div style="text-align:right;font-size:11px;color:#94A3B8;margin-top:4px;" id="charCount">0 / 1000 caractères</div>
+            </div>
+
+            <div class="fg full">
+              <label class="fl">Pièces jointes (optionnel)</label>
+              <div class="attach-zone" onclick="T('📁 Sélection de fichier...')">
+                <div class="attach-icon">📎</div>
+                <div class="attach-title">Glissez vos fichiers ici ou cliquez pour parcourir</div>
+                <div class="attach-sub">PNG, JPG, PDF — Max 10 MB par fichier — 3 fichiers maximum</div>
+              </div>
+            </div>
+
+            <div class="fg full">
+              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+                <input type="checkbox" id="c-rgpd" style="width:17px;height:17px;accent-color:var(--primary);margin-top:2px;flex-shrink:0;cursor:pointer;"/>
+                <span style="font-size:13px;color:var(--slate);line-height:1.6;">
+                  J'accepte que ServicesPlus traite mes données personnelles pour répondre à ma demande, conformément à la
+                  <a href="#" style="color:var(--primary);font-weight:700;">Politique de confidentialité</a>. *
+                </span>
+              </label>
+            </div>
+
+          </div>
+
+          <button class="btn-submit" onclick="envoyerMessage()">
+            📨 Envoyer le message
+          </button>
+        </div>
+
+        <!-- SUCCÈS -->
+        <div class="success-wrap" id="successWrap">
+          <div class="success-icon">✅</div>
+          <div class="success-title">Message envoyé !</div>
+          <div class="success-sub">
+            Merci pour votre message, <strong id="sucName">Mohammed</strong> !<br/>
+            Notre équipe vous répondra sous <strong>2 heures</strong> à l'adresse<br/>
+            <strong id="sucEmail">votre@email.com</strong>
+          </div>
+          <div class="success-ref" id="sucRef">📋 Référence : TICKET-2025-4782</div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button onclick="resetForm()" style="padding:12px 24px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px;">Envoyer un autre message</button>
+            <button onclick="location.href='01_accueil.html'" style="padding:12px 24px;background:#F8FAFC;color:var(--slate);border:1.5px solid var(--border);border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;">Retour à l'accueil</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SATISFACTION -->
+      <div class="card">
+        <div class="card-title" style="font-size:16px;margin-bottom:6px;">😊 Satisfaction du support</div>
+        <div style="color:var(--slate);font-size:14px;margin-bottom:4px;">Évaluez notre service d'assistance</div>
+        <div class="satis-stars" id="satisStars"></div>
+        <div style="text-align:center;font-size:13px;color:var(--slate);" id="satisLabel">Cliquez sur une étoile pour évaluer</div>
+      </div>
+
+    </div>
+
+    <!-- ══ SIDEBAR ══ -->
+    <div>
+
+      <!-- INFOS CONTACT -->
+      <div class="info-card">
+        <div class="ic-header">
+          <div class="ic-header-title">📞 Nos coordonnées</div>
+          <div class="ic-header-sub">Plusieurs façons de nous joindre</div>
+        </div>
+        <div class="ic-body">
+          <div class="contact-row">
+            <div class="cr-icon" style="background:#FFF0EB;">📧</div>
+            <div>
+              <div class="cr-label">Email principal</div>
+              <div class="cr-value">contact@servicesplus.sn</div>
+              <div class="cr-sub">Réponse sous 2h en jours ouvrés</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="cr-icon" style="background:#ECFDF5;">📞</div>
+            <div>
+              <div class="cr-label">Téléphone</div>
+              <div class="cr-value">+221 33 000 00 00</div>
+              <div class="cr-sub">Lun–Sam de 8h à 20h</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="cr-icon" style="background:#EFF6FF;">📱</div>
+            <div>
+              <div class="cr-label">WhatsApp</div>
+              <div class="cr-value">+221 77 000 00 00</div>
+              <div class="cr-sub">7j/7 de 8h à 22h</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="cr-icon" style="background:#F5F3FF;">📍</div>
+            <div>
+              <div class="cr-label">Adresse</div>
+              <div class="cr-value">12 Rue Félix Faure</div>
+              <div class="cr-sub">Plateau, Dakar, Sénégal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HORAIRES -->
+      <div class="info-card">
+        <div class="ic-header" style="background:linear-gradient(135deg,#059669,#34D399);">
+          <div class="ic-header-title">🕐 Horaires du support</div>
+          <div class="ic-header-sub">● Actuellement ouvert</div>
+        </div>
+        <div class="ic-body" id="horairesBody"></div>
+      </div>
+
+      <!-- CARTE -->
+      <div class="map-card">
+        <div class="map-placeholder" onclick="T('🗺️ Ouverture de Google Maps...')">
+          <div class="map-pin">📍</div>
+          <div class="map-addr">12 Rue Félix Faure, Dakar</div>
+          <div class="map-sub">Cliquez pour voir sur la carte</div>
+        </div>
+        <div class="map-body">
+          <div>
+            <div style="font-weight:700;font-size:13px;">Siège social ServicesPlus</div>
+            <div style="font-size:12px;color:var(--slate);">Plateau, Dakar — Sénégal</div>
+          </div>
+          <button onclick="T('🗺️ Navigation démarrée...')" style="padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:12px;">Itinéraire →</button>
+        </div>
+      </div>
+
+      <!-- ÉQUIPE -->
+      <div class="card" style="padding:20px;">
+        <div style="font-weight:800;font-size:15px;margin-bottom:14px;">👥 Notre équipe support</div>
+        <div class="team-grid" id="teamGrid"></div>
+      </div>
+
+      <!-- FAQ RAPIDE -->
+      <div class="card" style="padding:20px;">
+        <div style="font-weight:800;font-size:15px;margin-bottom:14px;">❓ Questions fréquentes</div>
+        <div id="faqMini"></div>
+        <a href="12_faq.html" style="display:block;text-align:center;margin-top:14px;font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;">Voir toutes les questions →</a>
+      </div>
+
+      <!-- RÉSEAUX SOCIAUX -->
+      <div class="card" style="padding:20px;">
+        <div style="font-weight:800;font-size:15px;margin-bottom:14px;">🌐 Suivez-nous</div>
+        <div class="social-grid" id="socialGrid"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="fl-logo">
+          <div class="fl-ic">🏠</div>
+          <div class="fl-text"><span>Services</span>Plus</div>
+        </div>
+        <p style="font-size:13px;line-height:1.8;margin-bottom:8px;">La plateforme qui met en relation clients et prestataires de services à domicile au Sénégal.</p>
+        <p style="font-size:11px;color:#475569;">UNCHK — Groupe 18 — Licence Dev. Web S6 — 2024/2025</p>
+      </div>
+      <div class="fc"><h4>Services</h4><ul>
+        <li>Plomberie</li><li>Électricité</li><li>Ménage</li><li>Jardinage</li><li>Peinture</li>
+      </ul></div>
+      <div class="fc"><h4>Plateforme</h4><ul>
+        <li onclick="location.href='01_accueil.html'">Accueil</li>
+        <li onclick="location.href='02_recherche.html'">Recherche</li>
+        <li onclick="location.href='09_inscription.html'">Devenir prestataire</li>
+        <li onclick="location.href='12_faq.html'">FAQ</li>
+        <li onclick="location.href='13_contact.html'">Contact</li>
+      </ul></div>
+      <div class="fc"><h4>Contact</h4><ul>
+        <li>📧 contact@servicesplus.sn</li>
+        <li>📞 +221 33 000 00 00</li>
+        <li>📍 Dakar, Sénégal</li>
+        <li>💬 Chat en ligne</li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 <b>ServicesPlus</b>. Tous droits réservés.</span>
+      <span>Fait avec ❤️ par le <b>Groupe 18 — UNCHK</b></span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════ DONNÉES ════ */
+const HORAIRES = [
+  {j:"Lundi",    h:"08:00 – 20:00", ouvert:true},
+  {j:"Mardi",    h:"08:00 – 20:00", ouvert:true},
+  {j:"Mercredi", h:"08:00 – 20:00", ouvert:true},
+  {j:"Jeudi",    h:"08:00 – 20:00", ouvert:true},
+  {j:"Vendredi", h:"08:00 – 20:00", ouvert:true},
+  {j:"Samedi",   h:"09:00 – 18:00", ouvert:true},
+  {j:"Dimanche", h:"Fermé",         ouvert:false},
+];
+
+const TEAM = [
+  {av:"👩‍💼", name:"Aminata S.",  role:"Support client",  color:"#FFE8DF"},
+  {av:"👨‍💼", name:"Ibrahima D.", role:"Support technique",color:"#DBEAFE"},
+  {av:"👩‍💼", name:"Fatou N.",    role:"Relations clients",color:"#D1FAE5"},
+  {av:"👨‍💼", name:"Omar B.",     role:"Litiges & médiations",color:"#EDE9FE"},
+];
+
+const FAQ_MINI = [
+  {q:"Comment annuler une réservation ?",  sub:"Moins de 24h avant = frais d'annulation"},
+  {q:"Délai de remboursement ?",            sub:"3 à 5 jours ouvrés"},
+  {q:"Comment signaler un prestataire ?",  sub:"Via le formulaire ou notre support"},
+  {q:"Devenir prestataire",                sub:"Dossier validé sous 48h"},
+];
+
+const SOCIALS = [
+  {ic:"📘", name:"Facebook"},
+  {ic:"📸", name:"Instagram"},
+  {ic:"🐦", name:"Twitter"},
+  {ic:"💼", name:"LinkedIn"},
+];
+
+let prioActif = "normal";
+let satisNote = 0;
+
+/* ════ INIT ════ */
+window.onload = () => {
+  renderHoraires();
+  renderTeam();
+  renderFAQMini();
+  renderSocials();
+  renderSatisStars();
+
+  // Compteur caractères
+  document.getElementById('c-message').addEventListener('input', function(){
+    document.getElementById('charCount').textContent = this.value.length + ' / 1000 caractères';
+    if(this.value.length > 900) this.value = this.value.substring(0, 1000);
+  });
+};
+
+/* ════ HORAIRES ════ */
+function renderHoraires() {
+  const jour = new Date().getDay();
+  const jours = [0,1,2,3,4,5,6];
+  document.getElementById('horairesBody').innerHTML = HORAIRES.map((h,i) => `
+    <div class="horaire-row" style="${jours[i]===jour?'background:#F8FAFC;border-radius:8px;padding:9px 8px;':''}">
+      <span class="horaire-jour" style="${jours[i]===jour?'color:var(--primary);':''}">${h.j}${jours[i]===jour?' (Aujourd\'hui)':''}</span>
+      <span class="horaire-heure ${h.ouvert?'ouvert':'ferme'}">${h.h}</span>
+    </div>
+  `).join('');
+}
+
+/* ════ ÉQUIPE ════ */
+function renderTeam() {
+  document.getElementById('teamGrid').innerHTML = TEAM.map(t => `
+    <div class="team-card" onclick="T('💬 Chat avec ${t.name}...')">
+      <div class="team-av" style="background:${t.color}">${t.av}</div>
+      <div>
+        <div class="team-name">${t.name}</div>
+        <div class="team-role">${t.role}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ════ FAQ MINI ════ */
+function renderFAQMini() {
+  document.getElementById('faqMini').innerHTML = FAQ_MINI.map(f => `
+    <div class="faq-mini" onclick="location.href='12_faq.html'">
+      <div class="faq-mini-q">❓ ${f.q}</div>
+      <div class="faq-mini-sub">${f.sub}</div>
+    </div>
+  `).join('');
+}
+
+/* ════ SOCIAUX ════ */
+function renderSocials() {
+  document.getElementById('socialGrid').innerHTML = SOCIALS.map(s => `
+    <button class="soc-btn" onclick="T('🔗 Redirection vers ${s.name}...')">${s.ic} ${s.name}</button>
+  `).join('');
+}
+
+/* ════ SATISFACTION ════ */
+function renderSatisStars() {
+  document.getElementById('satisStars').innerHTML = [1,2,3,4,5].map(n => `
+    <span class="star-btn ${n<=satisNote?'active':''}" onclick="setSatis(${n})">★</span>
+  `).join('');
+}
+
+function setSatis(n) {
+  satisNote = n;
+  renderSatisStars();
+  const labels = ["","Très insatisfait 😞","Insatisfait 😐","Neutre 🙂","Satisfait 😊","Très satisfait 🤩"];
+  document.getElementById('satisLabel').textContent = labels[n];
+  document.getElementById('satisLabel').style.color = n>=4?'#059669':n>=3?'#D97706':'#DC2626';
+  T(labels[n] + ' — Merci pour votre retour !');
+}
+
+/* ════ PRIORITÉ ════ */
+function setPrio(p, btn) {
+  prioActif = p;
+  document.querySelectorAll('.prio-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+/* ════ CANAUX ════ */
+function selectChannel(el, type) {
+  document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const actions = {
+    chat:  () => T('💬 Chat en cours d\'ouverture... Un agent vous répondra sous 2 min.'),
+    email: () => document.getElementById('formSection').scrollIntoView({behavior:'smooth'}),
+    phone: () => T('📞 +221 33 000 00 00 — Disponible Lun-Sam 8h-20h'),
+    faq:   () => location.href='12_faq.html',
+  };
+  if(actions[type]) actions[type]();
+}
+
+/* ════ ENVOI ════ */
+function envoyerMessage() {
+  const prenom  = document.getElementById('c-prenom').value.trim();
+  const nom     = document.getElementById('c-nom').value.trim();
+  const email   = document.getElementById('c-email').value.trim();
+  const sujet   = document.getElementById('c-sujet').value;
+  const message = document.getElementById('c-message').value.trim();
+  const rgpd    = document.getElementById('c-rgpd').checked;
+
+  // Validation
+  if(!prenom || !nom)    { T('⚠️ Veuillez renseigner votre nom complet.'); return; }
+  if(!email || !email.includes('@')) { T('⚠️ Veuillez entrer une adresse email valide.'); return; }
+  if(!sujet)             { T('⚠️ Veuillez sélectionner un sujet.'); return; }
+  if(!message || message.length < 20) { T('⚠️ Votre message doit contenir au moins 20 caractères.'); return; }
+  if(!rgpd)              { T('⚠️ Veuillez accepter la politique de confidentialité.'); return; }
+
+  // Animation bouton
+  const btn = document.querySelector('.btn-submit');
+  btn.textContent = '⏳ Envoi en cours...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    // Affichage succès
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('successWrap').style.display = 'block';
+    document.getElementById('sucName').textContent  = prenom;
+    document.getElementById('sucEmail').textContent = email;
+    document.getElementById('sucRef').textContent   = '📋 Référence : TICKET-2025-' + Math.floor(1000+Math.random()*9000);
+    T('✅ Message envoyé avec succès !');
+  }, 1600);
+}
+
+function resetForm() {
+  document.getElementById('formWrap').style.display  = 'block';
+  document.getElementById('successWrap').style.display = 'none';
+  document.getElementById('c-prenom').value  = '';
+  document.getElementById('c-nom').value     = '';
+  document.getElementById('c-email').value   = '';
+  document.getElementById('c-phone').value   = '';
+  document.getElementById('c-sujet').value   = '';
+  document.getElementById('c-message').value = '';
+  document.getElementById('c-rgpd').checked  = false;
+  document.getElementById('charCount').textContent = '0 / 1000 caractères';
+  const btn = document.querySelector('.btn-submit');
+  btn.textContent = '📨 Envoyer le message';
+  btn.disabled    = false;
+}
+
+/* ════ TOAST ════ */
+function T(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ServicesPlus – Réservation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary:#E85D26; --primary-light:#FFF0EB; --gold:#F59E0B;
+      --dark:#0F172A; --slate:#64748B; --border:#E9EEF4;
+      --bg:#F6F8FB; --green:#059669;
+    }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--dark); }
+
+    /* NAV */
+    nav { position:sticky;top:0;z-index:999;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:66px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 6px rgba(0,0,0,0.06); }
+    .logo { display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:24px; }
+    .logo-icon { width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:19px; }
+    .logo-text { font-family:'Playfair Display',serif;font-size:20px;font-weight:900; }
+    .logo-text span:first-child { color:var(--primary); }
+    .logo-text span:last-child  { color:var(--dark); }
+    .nav-links { display:flex;gap:4px;flex:1; }
+    .nav-link { padding:7px 14px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;background:transparent;color:var(--slate);text-decoration:none;display:inline-flex;align-items:center;transition:all 0.15s; }
+    .nav-link:hover,.nav-link.active { background:var(--primary-light);color:var(--primary); }
+    .nav-actions { display:flex;gap:10px;padding-left:16px;border-left:1px solid var(--border); }
+    .btn-login    { padding:8px 18px;background:transparent;color:var(--slate);border:1.5px solid var(--border);border-radius:10px;font-weight:600;cursor:pointer;font-size:13px; }
+    .btn-register { padding:8px 18px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px; }
+
+    /* LAYOUT */
+    .container { max-width:1000px;margin:0 auto;padding:32px 20px; }
+    .page-title { font-family:'Playfair Display',serif;font-size:26px;font-weight:900;margin-bottom:6px; }
+    .page-sub   { color:var(--slate);font-size:14px;margin-bottom:28px; }
+
+    /* ÉTAPES */
+    .steps-bar { background:white;border-radius:16px;padding:20px 28px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,0.05);display:flex;align-items:center;margin-bottom:32px; }
+    .step-item  { display:flex;flex-direction:column;align-items:center;gap:6px;flex:1; }
+    .step-circle { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;transition:all 0.3s; }
+    .step-circle.done    { background:#059669;color:white; }
+    .step-circle.active  { background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;box-shadow:0 4px 12px rgba(232,93,38,0.3); }
+    .step-circle.pending { background:#F1F5F9;color:#94A3B8; }
+    .step-label { font-size:11px;font-weight:700;white-space:nowrap; }
+    .step-label.done    { color:#059669; }
+    .step-label.active  { color:var(--primary); }
+    .step-label.pending { color:#94A3B8; }
+    .step-line  { flex:1;height:2px;margin:0 8px;margin-bottom:18px;transition:background 0.3s; }
+    .step-line.done    { background:linear-gradient(to right,#E85D26,#F59E0B); }
+    .step-line.pending { background:#E9EEF4; }
+
+    /* LAYOUT CONTENU */
+    .content-layout { di splay:grid;grid-template-columns:1fr 310px;gap:22px;align-items:start; }
+
+    /* CARD */
+    .card { background:white;border-radius:20px;padding:28px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,0.05); }
+    .card-title { font-weight:800;font-size:18px;margin-bottom:22px; }
+
+    /* CHOIX PRESTATAIRE */
+    .presta-choice { display:flex;gap:14px;align-items:center;padding:16px;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:all 0.2s;margin-bottom:10px; }
+    .presta-choice:hover,.presta-choice.selected { border-color:var(--primary);background:var(--primary-light); }
+    .p-avatar  { width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0; }
+    .p-name    { font-weight:800;font-size:15px;margin-bottom:2px; }
+    .p-service { color:var(--slate);font-size:12px;margin-bottom:5px; }
+    .p-stars   { color:#F59E0B;font-size:12px; }
+    .p-right   { margin-left:auto;text-align:right; }
+    .p-prix    { font-weight:900;color:var(--primary);font-size:15px; }
+    .p-dist    { font-size:11px;color:#94A3B8;margin-top:2px; }
+    .p-dispo   { font-size:11px;font-weight:700;color:#059669;margin-top:4px; }
+    .radio-c   { width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s; }
+    .presta-choice.selected .radio-c { border-color:var(--primary);background:var(--primary); }
+    .radio-dot { width:8px;height:8px;border-radius:50%;background:white;opacity:0; }
+    .presta-choice.selected .radio-dot { opacity:1; }
+
+    /* FORMULAIRE */
+    .form-grid  { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+    .form-group { display:flex;flex-direction:column;gap:7px; }
+    .form-group.full { grid-column:1/-1; }
+    .form-label { font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:0.5px; }
+    .form-input { padding:12px 16px;border-radius:11px;border:1.5px solid var(--border);font-size:14px;font-family:'Inter',sans-serif;color:var(--dark);outline:none;transition:border-color 0.15s;width:100%; }
+    .form-input:focus { border-color:var(--primary);box-shadow:0 0 0 3px rgba(232,93,38,0.1); }
+    textarea.form-input { resize:vertical;min-height:90px; }
+
+    /* CRÉNEAUX */
+    .creneaux-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px; }
+    .creneau-btn { padding:10px 0;border-radius:10px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;color:var(--slate);transition:all 0.15s;text-align:center; }
+    .creneau-btn:hover  { border-color:var(--primary);color:var(--primary);background:var(--primary-light); }
+    .creneau-btn.active { border-color:var(--primary);background:var(--primary);color:white; }
+    .creneau-btn.unavail{ background:#F8FAFC;color:#CBD5E1;cursor:not-allowed;text-decoration:line-through; }
+
+    /* PAIEMENT */
+    .pay-opt { display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:14px;border:1.5px solid var(--border);cursor:pointer;transition:all 0.2s;margin-bottom:10px; }
+    .pay-opt:hover,.pay-opt.selected { border-color:var(--primary);background:var(--primary-light); }
+    .pay-icon { font-size:24px; }
+    .pay-name { font-weight:700;font-size:14px; }
+    .pay-desc { font-size:12px;color:var(--slate); }
+    .pay-radio { margin-left:auto;width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all 0.2s; }
+    .pay-opt.selected .pay-radio { border-color:var(--primary);background:var(--primary); }
+    .pay-radio-dot { width:8px;height:8px;border-radius:50%;background:white;opacity:0; }
+    .pay-opt.selected .pay-radio-dot { opacity:1; }
+    .card-fields { background:#F8FAFC;border-radius:14px;padding:18px;margin-top:14px; }
+    .sec-badge { display:flex;align-items:center;gap:8px;background:#ECFDF5;border-radius:10px;padding:10px 14px;font-size:12px;color:#059669;font-weight:600;margin-top:14px; }
+
+    /* CONFIRMATION */
+    .confirm-wrap { text-align:center;padding:20px 0; }
+    .confirm-icon { width:80px;height:80px;border-radius:24px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 22px; }
+    .confirm-title { font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#059669;margin-bottom:10px; }
+    .confirm-sub   { color:var(--slate);font-size:15px;line-height:1.7;margin-bottom:28px; }
+    .confirm-box   { background:#F8FAFC;border-radius:16px;padding:20px;text-align:left;margin-bottom:24px; }
+    .confirm-row   { display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #E9EEF4;font-size:14px; }
+    .confirm-row:last-child { border-bottom:none;font-size:16px;font-weight:900; }
+    .confirm-row span:first-child { color:var(--slate); }
+    .confirm-actions { display:flex;gap:12px;justify-content:center; }
+
+    /* RÉCAP SIDEBAR */
+    .recap-card { background:white;border-radius:20px;padding:24px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,0.05);position:sticky;top:86px; }
+    .recap-title { font-weight:800;font-size:16px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #F1F5F9; }
+    .recap-presta { display:flex;gap:12px;align-items:center;background:#F8FAFC;border-radius:12px;padding:14px;margin-bottom:18px; }
+    .recap-row { display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #F8FAFC; }
+    .recap-row:last-of-type { border-bottom:none; }
+    .recap-row span:first-child { color:var(--slate); }
+    .recap-row span:last-child  { font-weight:600; }
+    .recap-total { display:flex;justify-content:space-between;font-size:17px;font-weight:900;padding-top:14px;border-top:2px solid #F1F5F9;margin-top:8px; }
+    .recap-total span:last-child { color:var(--primary); }
+
+    /* BOUTONS NAV */
+    .btn-nav  { display:flex;gap:12px;margin-top:24px; }
+    .btn-back { flex:1;padding:13px 0;background:#F8FAFC;color:var(--slate);border:1.5px solid var(--border);border-radius:13px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s; }
+    .btn-back:hover { border-color:var(--primary);color:var(--primary); }
+    .btn-next { flex:2;padding:13px 0;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:13px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.15s; }
+    .btn-next:hover { opacity:0.88; }
+    .btn-prim { padding:13px 28px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:13px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif; }
+    .btn-sec  { padding:13px 28px;background:#F8FAFC;color:var(--slate);border:1.5px solid var(--border);border-radius:13px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif; }
+
+    /* FOOTER */
+    footer { background:#0F172A;color:#94A3B8;padding:32px 40px 20px;margin-top:56px; }
+    .footer-bottom { max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;font-size:12px;padding-top:14px;border-top:1px solid #1E293B; }
+    .footer-bottom b { color:var(--primary); }
+  </style>
+  <script src="api.js"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="01_accueil.html" class="logo">
+      <div class="logo-icon">🏠</div>
+      <div class="logo-text"><span>Services</span><span>Plus</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="01_accueil.html"          class="nav-link">Accueil</a>
+      <a href="02_recherche.html"        class="nav-link">Recherche</a>
+      <a href="04_reservation.html"      class="nav-link active">Réservation</a>
+      <a href="07_dashboard_client.html" class="nav-link">Dashboard</a>
+      <a href="12_faq.html"              class="nav-link">FAQ</a>
+      <a href="13_contact.html"          class="nav-link">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-login"    onclick="location.href='10_connexion.html'">Connexion</button>
+      <button class="btn-register" onclick="location.href='11_inscription.html'">S'inscrire</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-title">📅 Nouvelle réservation</div>
+    <div class="page-sub">Réservez un prestataire en quelques étapes simples et sécurisées</div>
+
+    <!-- BARRE ÉTAPES -->
+    <div class="steps-bar" id="stepsBar"></div>
+
+    <div class="content-layout">
+      <div>
+
+        <!-- ÉTAPE 1 : PRESTATAIRE -->
+        <div id="step1" class="card">
+          <div class="card-title">👤 Choisissez votre prestataire</div>
+          <div id="prestaList"></div>
+          <div class="btn-nav">
+            <button class="btn-next" style="flex:1;" onclick="goStep(2)">Continuer →</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 2 : DATE & HEURE -->
+        <div id="step2" class="card" style="display:none;">
+          <div class="card-title">📅 Date, heure et détails</div>
+
+          <div id="selectedBar" style="background:#FFF0EB;border-radius:14px;padding:14px;margin-bottom:22px;display:flex;gap:12px;align-items:center;">
+            <span id="selIcon" style="font-size:28px;">🧑‍🔧</span>
+            <div>
+              <div id="selName"    style="font-weight:700;font-size:15px;">Karim Benali</div>
+              <div id="selService" style="font-size:13px;color:var(--slate);">Plombier • ⭐ 4.9 • 150 MAD/h</div>
+            </div>
+            <button onclick="goStep(1)" style="margin-left:auto;padding:6px 14px;background:white;border:1.5px solid var(--border);border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;color:var(--slate);">Changer</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Date d'intervention</label>
+              <input type="date" class="form-input" id="dateInput" onchange="updateRecap()"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Durée estimée</label>
+              <select class="form-input" id="dureeInput" onchange="updateRecap()">
+                <option value="1">1 heure</option>
+                <option value="2" selected>2 heures</option>
+                <option value="3">3 heures</option>
+                <option value="4">4 heures</option>
+                <option value="5">5 heures</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Choisir un créneau</label>
+              <div class="creneaux-grid" id="creneauxGrid"></div>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Adresse d'intervention</label>
+              <input type="text" class="form-input" id="adresseInput" placeholder="Ex : 12 Rue Félix Faure, Dakar"/>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Description du problème</label>
+              <textarea class="form-input" id="descInput" placeholder="Décrivez votre problème en quelques mots…"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Téléphone de contact</label>
+              <input type="tel" class="form-input" placeholder="+221 77 000 00 00"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Urgence ?</label>
+              <select class="form-input">
+                <option>Non, intervention planifiée</option>
+                <option>Oui, dès que possible</option>
+                <option>Oui, dans les 2 heures</option>
+              </select>
+            </div>
+          </div>
+          <div class="btn-nav">
+            <button class="btn-back" onclick="goStep(1)">← Retour</button>
+            <button class="btn-next" onclick="goStep(3)">Continuer vers le paiement →</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 3 : PAIEMENT -->
+        <div id="step3" class="card" style="display:none;">
+          <div class="card-title">💳 Paiement sécurisé</div>
+          <div id="payOptions"></div>
+          <div class="card-fields" id="cardFields">
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label">Numéro de carte</label>
+                <input type="text" class="form-input" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date d'expiration</label>
+                <input type="text" class="form-input" placeholder="MM/AA" maxlength="5"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVV</label>
+                <input type="text" class="form-input" placeholder="•••" maxlength="3"/>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Nom sur la carte</label>
+                <input type="text" class="form-input" placeholder="PRÉNOM NOM"/>
+              </div>
+            </div>
+          </div>
+          <div class="sec-badge">🔒 Paiement 100% sécurisé — Données chiffrées SSL</div>
+          <div class="btn-nav">
+            <button class="btn-back" onclick="goStep(2)">← Retour</button>
+            <button class="btn-next" onclick="confirmerReservation()">🔒 Confirmer et payer →</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 4 : CONFIRMATION -->
+        <div id="step4" class="card" style="display:none;">
+          <div class="confirm-wrap">
+            <div class="confirm-icon">✅</div>
+            <div class="confirm-title">Réservation confirmée !</div>
+            <div class="confirm-sub">
+              Votre réservation a été envoyée à <strong id="confPrestaName">Karim Benali</strong>.<br/>
+              Un email et un SMS de confirmation vous ont été envoyés.
+            </div>
+            <div class="confirm-box">
+              <div class="confirm-row"><span>N° Réservation</span><span style="font-weight:800;color:var(--primary);">#RES-2025-0847</span></div>
+              <div class="confirm-row"><span>Prestataire</span><span id="cPresta">—</span></div>
+              <div class="confirm-row"><span>Service</span><span id="cService">—</span></div>
+              <div class="confirm-row"><span>Date & Heure</span><span id="cDate">—</span></div>
+              <div class="confirm-row"><span>Adresse</span><span id="cAdresse">—</span></div>
+              <div class="confirm-row"><span>Mode de paiement</span><span id="cPaiement">Carte bancaire</span></div>
+              <div class="confirm-row"><span>Montant payé</span><span id="cMontant" style="color:var(--primary);">—</span></div>
+            </div>
+
+            <!-- Suivi -->
+            <div style="background:#F8FAFC;border-radius:14px;padding:18px;margin-bottom:24px;text-align:left;">
+              <div style="font-weight:800;font-size:14px;margin-bottom:14px;">📍 Suivi de votre intervention</div>
+              <div id="suiviEtapes"></div>
+            </div>
+
+            <div class="confirm-actions">
+              <button class="btn-prim" onclick="location.href='07_dashboard_client.html'">Voir mes réservations →</button>
+              <button class="btn-sec"  onclick="location.reload()">Nouvelle réservation</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RÉCAP SIDEBAR -->
+      <div class="recap-card">
+        <div class="recap-title">📋 Récapitulatif</div>
+        <div class="recap-presta">
+          <span id="recapIcon" style="font-size:28px;">🧑‍🔧</span>
+          <div>
+            <div id="recapName"  style="font-weight:700;font-size:14px;">Karim Benali</div>
+            <div style="color:#F59E0B;font-size:12px;">★★★★★ 4.9 (127 avis)</div>
+          </div>
+        </div>
+        <div class="recap-row"><span>Service</span><span id="rService">Plomberie</span></div>
+        <div class="recap-row"><span>Date</span><span id="rDate">Non définie</span></div>
+        <div class="recap-row"><span>Créneau</span><span id="rHeure">14:00</span></div>
+        <div class="recap-row"><span>Durée</span><span id="rDuree">2 heures</span></div>
+        <div class="recap-row"><span>Tarif horaire</span><span id="rTarif">150 MAD/h</span></div>
+        <div class="recap-row"><span>Sous-total</span><span id="rSousTotal">300 MAD</span></div>
+        <div class="recap-row"><span>Frais service (5%)</span><span id="rFrais">15 MAD</span></div>
+        <div class="recap-total"><span>Total</span><span id="rTotal">315 MAD</span></div>
+        <div style="margin-top:16px;padding:12px 14px;background:#ECFDF5;border-radius:10px;font-size:12px;color:#059669;font-weight:600;">
+          🛡️ Paiement sécurisé après confirmation
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:#94A3B8;text-align:center;line-height:1.6;">
+          En réservant vous acceptez les <a href="#" style="color:var(--primary);font-weight:600;">CGU</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-bottom">
+      <span>© 2025 <b>ServicesPlus</b>. Tous droits réservés.</span>
+      <span>Fait avec ❤️ par le <b>Groupe 18 — UNCHK</b></span>
+    </div>
+  </footer>
+
+<script>
+  /* ── DONNÉES ── */
+  // Données de démo
+  let PRESTAS = [
+    { id:1, nom:"Karim Benali",  service:"Plombier",   note:4.9, avis:127, prix:4500, dist:"Dakar",  dispo:true,  icon:"🧑‍🔧", color:"#DBEAFE", cat_id:1 },
+    { id:2, nom:"Sara Mansouri", service:"Ménage",      note:4.8, avis:89,  prix:2500, dist:"Dakar",  dispo:true,  icon:"👩‍💼", color:"#FFE8DF", cat_id:3 },
+    { id:4, nom:"Fatima Alaoui", service:"Jardinière",  note:4.9, avis:64,  prix:3000, dist:"Dakar",  dispo:true,  icon:"👩‍🌾", color:"#D1FAE5", cat_id:4 },
+    { id:3, nom:"Ahmed Ziani",   service:"Électricien", note:4.7, avis:203, prix:6000, dist:"Thiès",  dispo:true,  icon:"👨‍🔧", color:"#FEF3C7", cat_id:2 },
+  ];
+  const PAYS = [
+    { icon:"💳", nom:"Carte bancaire",    desc:"Visa, Mastercard — immédiat",       id:"carte"  },
+    { icon:"📱", nom:"Orange Money",      desc:"Paiement via Orange Money",          id:"orange" },
+    { icon:"🌊", nom:"Wave",              desc:"Paiement rapide via Wave",            id:"wave"   },
+    { icon:"💵", nom:"Espèces",           desc:"En main propre après intervention",  id:"cash"   },
+  ];
+  const CRENEAUX = [
+    {h:"08:00",ok:true},{h:"09:00",ok:true},{h:"10:00",ok:false},{h:"11:00",ok:true},
+    {h:"12:00",ok:false},{h:"13:00",ok:false},{h:"14:00",ok:true},{h:"15:00",ok:true},
+    {h:"16:00",ok:true},{h:"17:00",ok:false},{h:"18:00",ok:true},{h:"19:00",ok:true},
+  ];
+
+  let step = 1;
+  let selPresta = PRESTAS[0];
+  let selHeure  = "14:00";
+  let selPay    = "carte";
+  const LABELS  = ["Prestataire","Date & Heure","Paiement","Confirmation"];
+
+  /* ── INIT ── */
+  window.onload = async () => {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dateInput').min = document.getElementById('dateInput').value = today;
+    renderSteps(); renderCreneaux(); renderPays();
+
+    // Charger les prestataires depuis l'API
+    try {
+      const urlParams  = new URLSearchParams(window.location.search);
+      const prestaIdUrl = urlParams.get('id') || urlParams.get('prestataire_id');
+      const data = await apiFetch('prestataires.php');
+      if (data.success && data.data.prestataires.length) {
+        PRESTAS = data.data.prestataires.map(p => ({
+          id:      p.id,
+          nom:     p.prenom + ' ' + p.nom,
+          service: p.service,
+          note:    parseFloat(p.note_moyenne) || 0,
+          avis:    parseInt(p.nb_avis) || 0,
+          prix:    parseInt(p.tarif_horaire),
+          dist:    p.ville || 'Dakar',
+          dispo:   true,
+          icon:    '👤',
+          color:   '#F1F5F9',
+          cat_id:  p.categorie_id || 1,
+        }));
+        // Si venu depuis la recherche avec un ID spécifique, le mettre en premier
+        if (prestaIdUrl) {
+          const idx = PRESTAS.findIndex(p => p.id == prestaIdUrl);
+          if (idx > 0) { const [item] = PRESTAS.splice(idx,1); PRESTAS.unshift(item); }
+        }
+      }
+    } catch(e) { console.warn('API non disponible'); }
+
+    selPresta = PRESTAS[0];
+    renderPrestas();
+    updateRecap();
+  };
+
+  /* ── ÉTAPES ── */
+  function renderSteps() {
+    document.getElementById('stepsBar').innerHTML = LABELS.map((lbl,i) => {
+      const n = i+1, st = n < step ? 'done' : n === step ? 'active' : 'pending';
+      return `
+        <div class="step-item">
+          <div class="step-circle ${st}">${st==='done'?'✓':n}</div>
+          <span class="step-label ${st}">${lbl}</span>
+        </div>
+        ${i<LABELS.length-1 ? `<div class="step-line ${n<step?'done':'pending'}"></div>` : ''}
+      `;
+    }).join('');
+  }
+
+  function goStep(n) {
+    if(n===4) fillConfirm();
+    step = n;
+    renderSteps();
+    [1,2,3,4].forEach(i => document.getElementById('step'+i).style.display = i===n?'block':'none');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  /* ── PRESTATAIRES ── */
+  function renderPrestas() {
+    document.getElementById('prestaList').innerHTML = PRESTAS.map((p,i) => `
+      <div class="presta-choice ${i===0?'selected':''}" onclick="pickPresta(${i},this)">
+        <div class="radio-c"><div class="radio-dot"></div></div>
+        <div class="p-avatar" style="background:${p.color}">${p.icon}</div>
+        <div>
+          <div class="p-name">${p.nom}</div>
+          <div class="p-service">${p.service} • ${p.avis} avis</div>
+          <div class="p-stars">${stars(p.note)} ${p.note}</div>
+        </div>
+        <div class="p-right">
+          <div class="p-prix">${p.prix} MAD/h</div>
+          <div class="p-dist">📍 ${p.dist}</div>
+          <div class="p-dispo" style="color:${p.dispo?'#059669':'#94A3B8'}">${p.dispo?'● Disponible':'○ Indisponible'}</div>
+        </div>
+      </div>
+    `).join('') +
+    `<div style="text-align:center;padding:10px 0;">
+      <a href="02_recherche.html" style="color:var(--primary);font-weight:700;font-size:13px;text-decoration:none;">+ Voir d'autres prestataires</a>
+    </div>`;
+  }
+
+  function pickPresta(i, el) {
+    document.querySelectorAll('.presta-choice').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');
+    selPresta = PRESTAS[i];
+    document.getElementById('selIcon').textContent    = selPresta.icon;
+    document.getElementById('selName').textContent    = selPresta.nom;
+    document.getElementById('selService').textContent = `${selPresta.service} • ⭐ ${selPresta.note} • ${selPresta.prix.toLocaleString()} FCFA/h`;
+    document.getElementById('recapIcon').textContent  = selPresta.icon;
+    document.getElementById('recapName').textContent  = selPresta.nom;
+    document.getElementById('rService').textContent   = selPresta.service;
+    document.getElementById('rTarif').textContent     = selPresta.prix.toLocaleString() + ' FCFA/h';
+    updateRecap();
+  }
+
+  /* ── CRÉNEAUX ── */
+  function renderCreneaux() {
+    document.getElementById('creneauxGrid').innerHTML = CRENEAUX.map(c=>`
+      <button class="creneau-btn ${!c.ok?'unavail':c.h==='14:00'?'active':''}"
+        ${!c.ok?'disabled':''}
+        onclick="pickCreneau('${c.h}',this)">${c.h}${!c.ok?' 🚫':''}</button>
+    `).join('');
+  }
+
+  function pickCreneau(h, btn) {
+    document.querySelectorAll('.creneau-btn:not(.unavail)').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    selHeure = h;
+    document.getElementById('rHeure').textContent = h;
+  }
+
+  /* ── PAIEMENTS ── */
+  function renderPays() {
+    document.getElementById('payOptions').innerHTML = PAYS.map(p=>`
+      <div class="pay-opt ${p.id==='carte'?'selected':''}" onclick="pickPay('${p.id}',this)">
+        <span class="pay-icon">${p.icon}</span>
+        <div><div class="pay-name">${p.nom}</div><div class="pay-desc">${p.desc}</div></div>
+        <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+      </div>
+    `).join('');
+  }
+
+  function pickPay(id, el) {
+    document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+    selPay = id;
+    document.getElementById('cardFields').style.display = id==='carte'?'block':'none';
+    document.getElementById('cPaiement').textContent = el.querySelector('.pay-name').textContent;
+  }
+
+  /* ── RÉCAP ── */
+  function updateRecap() {
+    const date  = document.getElementById('dateInput')?.value || '';
+    const duree = parseInt(document.getElementById('dureeInput')?.value || 2);
+    const sous  = selPresta.prix * duree;
+    const frais = Math.round(sous * 0.05);
+    const total = sous + frais;
+    if(date){ const d=new Date(date); document.getElementById('rDate').textContent = d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'}); }
+    document.getElementById('rDuree').textContent    = duree+' heure'+(duree>1?'s':'');
+    document.getElementById('rSousTotal').textContent= sous.toLocaleString()+' FCFA';
+    document.getElementById('rFrais').textContent    = frais.toLocaleString()+' FCFA';
+    document.getElementById('rTotal').textContent    = total.toLocaleString()+' FCFA';
+  }
+
+  /* ── CONFIRMATION ── */
+  function fillConfirm() {
+    const duree   = parseInt(document.getElementById('dureeInput').value);
+    const total   = Math.round(selPresta.prix * duree * 1.05);
+    const dateVal = document.getElementById('dateInput').value;
+    const adresse = document.getElementById('adresseInput').value || 'Non renseignée';
+    const dateStr = dateVal ? new Date(dateVal).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'}) : '—';
+
+    document.getElementById('confPrestaName').textContent = selPresta.nom;
+    document.getElementById('cPresta').textContent   = selPresta.nom;
+    document.getElementById('cService').textContent  = selPresta.service;
+    document.getElementById('cDate').textContent     = dateStr + ' à ' + selHeure;
+    document.getElementById('cAdresse').textContent  = adresse;
+    document.getElementById('cMontant').textContent  = total.toLocaleString() + ' FCFA';
+
+    document.getElementById('suiviEtapes').innerHTML = [
+      {ic:'✅',lbl:'Réservation confirmée',done:true},
+      {ic:'📩',lbl:'Prestataire notifié',  done:true},
+      {ic:'🔧',lbl:'Intervention en cours',done:false},
+      {ic:'⭐',lbl:'Évaluation à compléter',done:false},
+    ].map(s=>`
+      <div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #F1F5F9;">
+        <span style="font-size:18px;">${s.ic}</span>
+        <span style="font-size:14px;font-weight:${s.done?700:400};color:${s.done?'#059669':'#94A3B8'};">${s.lbl}</span>
+        <span style="margin-left:auto;font-size:11px;font-weight:700;color:${s.done?'#059669':'#CBD5E1'};">${s.done?'✓ Fait':'En attente'}</span>
+      </div>
+    `).join('');
+  }
+
+  /* ── UTILS ── */
+  function stars(n){ return [1,2,3,4,5].map(i=>`<span style="color:${i<=Math.round(n)?'#F59E0B':'#E2E8F0'}">★</span>`).join(''); }
+  function formatCard(el){ let v=el.value.replace(/\D/g,'').substring(0,16); el.value=v.replace(/(.{4})/g,'$1 ').trim(); }
+
+  /* ── CONFIRMER RÉSERVATION AVEC L'API ── */
+  async function confirmerReservation() {
+    const user = Auth.getUser();
+    if (!user) {
+      T('⚠️ Veuillez vous connecter pour réserver.');
+      setTimeout(() => { location.href = '08_connexion.html'; }, 1500);
+      return;
+    }
+
+    const dateVal = document.getElementById('dateInput')?.value || '';
+    const adresse = document.getElementById('adresseInput')?.value || '';
+    const duree   = parseInt(document.getElementById('dureeInput')?.value || 2);
+
+    if (!dateVal) { T('⚠️ Veuillez sélectionner une date.'); return; }
+    if (!adresse) { T('⚠️ Veuillez entrer votre adresse.'); return; }
+
+    const btn = document.querySelector('[onclick="confirmerReservation()"]');
+    if (btn) { btn.textContent = '⏳ Confirmation...'; btn.disabled = true; }
+
+    const body = {
+      prestataire_id:   selPresta.id,
+      categorie_id:     selPresta.cat_id || 1,
+      description:      'Réservation via ServicesPlus',
+      adresse:          adresse,
+      ville:            selPresta.dist || 'Dakar',
+      date_reservation: dateVal + ' ' + selHeure + ':00',
+      duree_heures:     duree,
+      urgence:          0,
+      methode_paiement: selPay === 'orange' ? 'orange_money' : selPay === 'cash' ? 'especes' : selPay,
+    };
+
+    const data = await apiFetch('reservations.php', 'POST', body);
+
+    if (btn) { btn.textContent = '🔒 Confirmer et payer →'; btn.disabled = false; }
+
+    if (data.success) {
+      fillConfirm();
+      goStep(4);
+      document.getElementById('confPrestaName').textContent = selPresta.nom;
+      T('✅ Réservation confirmée ! Réf : ' + data.data.reference);
+    } else {
+      T('❌ ' + data.message);
+    }
+  }
+</script>
+</body>
+</html>

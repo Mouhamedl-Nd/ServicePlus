@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ServicesPlus – Administration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#E85D26;--pl:#FFF0EB;--gold:#F59E0B;--dark:#0F172A;--slate:#64748B;--border:#E9EEF4;--bg:#F6F8FB;--green:#059669;--blue:#2563EB;--red:#DC2626}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark)}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:999;background:rgba(15,23,42,0.97);backdrop-filter:blur(12px);border-bottom:1px solid #1E293B;padding:0 40px;height:66px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 6px rgba(0,0,0,0.2)}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:16px}
+    .logo-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:19px}
+    .logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:white}
+    .logo-text span{color:var(--primary)}
+    .abadge{background:var(--red);color:white;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.5px}
+    .nav-links{display:flex;gap:4px;flex:1;margin-left:16px}
+    .nl{padding:7px 14px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;background:transparent;color:#94A3B8;text-decoration:none;display:inline-flex;align-items:center;transition:all .15s}
+    .nl:hover,.nl.active{background:rgba(232,93,38,.15);color:var(--primary)}
+    .nav-r{display:flex;align-items:center;gap:10px;padding-left:16px;border-left:1px solid #1E293B}
+    .avc{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:15px}
+    .btn-lo{padding:7px 14px;background:rgba(255,255,255,.1);color:#94A3B8;border:1px solid #334155;border-radius:9px;font-weight:600;cursor:pointer;font-size:12px;transition:all .15s}
+    .btn-lo:hover{background:rgba(220,38,38,.2);color:#F87171;border-color:#DC2626}
+
+    /* LAYOUT */
+    .container{max-width:1280px;margin:0 auto;padding:28px 20px}
+    .dash{display:grid;grid-template-columns:220px 1fr;gap:22px;align-items:start}
+
+    /* SIDEBAR */
+    .sidebar{background:#0F172A;border-radius:20px;border:1px solid #1E293B;overflow:hidden;position:sticky;top:86px}
+    .sb-top{padding:20px;border-bottom:1px solid #1E293B;text-align:center}
+    .sb-icon{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 10px}
+    .sb-title{color:white;font-weight:800;font-size:15px;margin-bottom:4px}
+    .sb-sub{color:#64748B;font-size:11px}
+    .sb-menu{padding:12px}
+    .msl{color:#334155;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:8px 14px 4px;display:block}
+    .mi{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:11px;cursor:pointer;font-size:13px;font-weight:600;color:#64748B;transition:all .15s;text-decoration:none;margin-bottom:2px;border:none;background:transparent;width:100%;font-family:'Inter',sans-serif;text-align:left}
+    .mi:hover{background:#1E293B;color:white}
+    .mi.active{background:rgba(232,93,38,.15);color:var(--primary)}
+    .mi .ic{font-size:16px;width:20px;text-align:center}
+    .cnt{margin-left:auto;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px}
+    .cr{background:rgba(220,38,38,.2);color:#F87171}
+    .co{background:rgba(232,93,38,.2);color:var(--primary)}
+    .msep{height:1px;background:#1E293B;margin:8px 14px}
+
+    /* CARDS */
+    .card{background:white;border-radius:18px;padding:22px;border:1.5px solid var(--border);box-shadow:0 2px 6px rgba(15,23,42,.04)}
+    .ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .ct{font-weight:800;font-size:16px}
+
+    /* KPI */
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+    .kpi{background:white;border-radius:16px;padding:20px;border:1.5px solid var(--border);box-shadow:0 2px 6px rgba(15,23,42,.04);position:relative;overflow:hidden;cursor:pointer;transition:all .2s}
+    .kpi:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,23,42,.1)}
+    .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .kpi.b::before{background:#2563EB}.kpi.o::before{background:#E85D26}.kpi.g::before{background:#059669}.kpi.au::before{background:#F59E0B}
+    .kt{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+    .ki{font-size:26px}
+    .ktr{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+    .tu{color:#059669;background:#ECFDF5}.tn{color:#64748B;background:#F1F5F9}
+    .kv{font-size:26px;font-weight:900;margin-bottom:3px}
+    .kl{font-size:12px;color:var(--slate)}
+    .ks{font-size:11px;color:#94A3B8;margin-top:4px}
+
+    /* GRILLES */
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+    .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:20px}
+
+    /* GRAPHIQUE */
+    .chart-b{display:flex;align-items:flex-end;gap:6px;height:120px}
+    .bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .bf{width:100%;border-radius:6px 6px 0 0}
+    .bl{font-size:10px;color:#94A3B8;font-weight:600}
+    .bv{font-size:10px;color:var(--slate);font-weight:700}
+
+    /* VALIDATION */
+    .vi{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #F8FAFC}
+    .vi:last-child{border-bottom:none}
+    .vl{display:flex;gap:12px;align-items:center}
+    .vav{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:20px}
+    .vn{font-weight:700;font-size:14px}
+    .vm{font-size:12px;color:var(--slate);margin-top:2px}
+    .va-btns{display:flex;gap:7px}
+
+    /* ACTIVITÉ */
+    .ai{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #F8FAFC}
+    .ai:last-child{border-bottom:none}
+    .aico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+    .am{font-size:13px;font-weight:600;margin-bottom:2px}
+    .at{font-size:11px;color:#94A3B8}
+
+    /* TABLE */
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{text-align:left;padding:10px 12px;color:#94A3B8;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #F1F5F9;white-space:nowrap}
+    td{padding:13px 12px;border-bottom:1px solid #F8FAFC;vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:#FAFBFC}
+
+    /* BADGES */
+    .badge{padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+    .bg2{color:#059669;background:#ECFDF5}.bo2{color:#D97706;background:#FFFBEB}
+    .bb2{color:#2563EB;background:#EFF6FF}.br2{color:#DC2626;background:#FEF2F2}.bgy{color:#64748B;background:#F1F5F9}
+
+    /* BOUTONS */
+    .btn-p{padding:9px 18px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:opacity .15s}
+    .btn-p:hover{opacity:.88}
+    .btn-o{padding:8px 16px;background:transparent;color:var(--slate);border:1.5px solid var(--border);border-radius:10px;font-weight:600;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all .15s}
+    .btn-o:hover{border-color:var(--primary);color:var(--primary)}
+    .btn-s{padding:5px 11px;border-radius:8px;border:none;cursor:pointer;font-size:11px;font-weight:700;font-family:'Inter',sans-serif}
+    .sg{background:#ECFDF5;color:#059669}.so{background:#FFF0EB;color:#E85D26}
+    .sr{background:#FEF2F2;color:#DC2626}.sb3{background:#EFF6FF;color:#2563EB}.sgr{background:#F1F5F9;color:#64748B}
+
+    /* FILTRES */
+    .fi{padding:9px 14px;border-radius:10px;border:1.5px solid var(--border);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
+    .fi:focus{border-color:var(--primary)}
+    .fsel{padding:9px 14px;border-radius:10px;border:1.5px solid var(--border);font-size:13px;font-family:'Inter',sans-serif;outline:none;background:white;cursor:pointer}
+    .fbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+
+    /* TABS */
+    .ts{display:none}.ts.active{display:block}
+
+    /* SWITCH */
+    .sw{width:44px;height:24px;border-radius:20px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+    .sw-dot{position:absolute;top:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s}
+
+    /* FOOTER */
+    footer{background:#0F172A;color:#94A3B8;padding:24px 40px 16px;margin-top:48px;border-top:1px solid #1E293B}
+    .fbot{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;font-size:12px;padding-top:12px;border-top:1px solid #1E293B}
+    .fbot b{color:var(--primary)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;color:white;padding:12px 24px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:all .3s;opacity:0;pointer-events:none;border:1px solid #334155}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* MODAL */
+    .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center}
+    .mo.show{display:flex}
+    .moc{background:white;border-radius:22px;padding:32px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+  </style>
+  <script src="api.js"></script>
+</head>
+<body>
+
+<!-- NAVBAR SOMBRE ADMIN -->
+<nav>
+  <a href="01_accueil.html" class="logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-text"><span>Services</span>Plus</div>
+  </a>
+  <span class="abadge">🛡️ ADMIN</span>
+  <div class="nav-links">
+    <a class="nl active" href="07_admin.html">Dashboard</a>
+    <a class="nl" href="01_accueil.html">Voir le site</a>
+    <a class="nl" href="12_faq.html">FAQ</a>
+    <a class="nl" href="13_contact.html">Support</a>
+  </div>
+  <div class="nav-r">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="avc">👨‍💼</div>
+      <span style="color:white;font-size:13px;font-weight:700;">Super Admin</span>
+    </div>
+    <button class="btn-lo" onclick="location.href='10_connexion.html'">🚪 Déconnexion</button>
+  </div>
+</nav>
+
+<div class="container">
+<div class="dash">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-top">
+      <div class="sb-icon">🛡️</div>
+      <div class="sb-title">Panel Admin</div>
+      <div class="sb-sub">ServicesPlus v2.0</div>
+    </div>
+    <div class="sb-menu">
+      <span class="msl">Principal</span>
+      <button class="mi active" onclick="goTab('overview',this)"><span class="ic">📊</span> Vue d'ensemble</button>
+      <button class="mi" onclick="goTab('prestas',this)"><span class="ic">🔧</span> Prestataires <span class="cnt co">2 400</span></button>
+      <button class="mi" onclick="goTab('users',this)"><span class="ic">👥</span> Utilisateurs <span class="cnt co">18.5K</span></button>
+      <button class="mi" onclick="goTab('reservations',this)"><span class="ic">📅</span> Réservations</button>
+      <button class="mi" onclick="goTab('validation',this)"><span class="ic">⏳</span> Validation <span class="cnt cr">3</span></button>
+      <div class="msep"></div>
+      <span class="msl">Finances</span>
+      <button class="mi" onclick="goTab('revenus',this)"><span class="ic">💰</span> Revenus</button>
+      <div class="msep"></div>
+      <span class="msl">Système</span>
+      <button class="mi" onclick="goTab('settings',this)"><span class="ic">⚙️</span> Paramètres</button>
+      <button class="mi" onclick="goTab('logs',this)"><span class="ic">📋</span> Logs système</button>
+      <div class="msep"></div>
+      <a class="mi" style="color:#F87171;" href="10_connexion.html"><span class="ic">🚪</span> Déconnexion</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+      <div>
+        <h1 style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;margin-bottom:4px;">🛡️ Panel Administrateur</h1>
+        <p style="color:var(--slate);font-size:14px;" id="adminDate"></p>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-o" onclick="T('📊 Rapport généré !')">📊 Rapport</button>
+        <button class="btn-p" onclick="showM()">+ Ajouter utilisateur</button>
+      </div>
+    </div>
+
+    <!-- ══ VUE D'ENSEMBLE ══ -->
+    <div class="ts active" id="tab-overview">
+      <div class="kpi-grid">
+        <div class="kpi b" onclick="goTab('prestas',null)">
+          <div class="kt"><span class="ki">🔧</span><span class="ktr tu">+12%</span></div>
+          <div class="kv">2 400</div><div class="kl">Prestataires actifs</div><div class="ks">+48 ce mois • 3 en attente</div>
+        </div>
+        <div class="kpi o" onclick="goTab('users',null)">
+          <div class="kt"><span class="ki">👥</span><span class="ktr tu">+8%</span></div>
+          <div class="kv">18 500</div><div class="kl">Clients inscrits</div><div class="ks">+340 ce mois</div>
+        </div>
+        <div class="kpi g" onclick="goTab('revenus',null)">
+          <div class="kt"><span class="ki">💰</span><span class="ktr tu">+24%</span></div>
+          <div class="kv">184 K</div><div class="kl">Revenus du mois (MAD)</div><div class="ks">Objectif : 200K MAD</div>
+        </div>
+        <div class="kpi au">
+          <div class="kt"><span class="ki">⭐</span><span class="ktr tn">stable</span></div>
+          <div class="kv">4.8</div><div class="kl">Satisfaction globale</div><div class="ks">1 240 avis ce mois</div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <div class="ch">
+            <span class="ct">📈 Réservations / mois</span>
+            <div style="display:flex;gap:6px;">
+              <button class="btn-s sb3" onclick="setCP('6m')">6 mois</button>
+              <button class="btn-s so" onclick="setCP('12m')">12 mois</button>
+            </div>
+          </div>
+          <div class="chart-b" id="mainChart"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid #F1F5F9;font-size:13px;">
+            <div><span style="color:var(--slate);">Total :</span> <strong>1 429</strong></div>
+            <div><span style="color:var(--slate);">Moy/mois :</span> <strong style="color:var(--primary);">238</strong></div>
+            <div><span style="color:var(--slate);">Succès :</span> <strong style="color:#059669;">94%</strong></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">⏳ Prestataires à valider</span><span class="badge br2">3 en attente</span></div>
+          <div id="valList"></div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <div class="ch"><span class="ct">🕐 Activité en temps réel</span><button class="btn-s sb3" onclick="renderAct()">↻ Actualiser</button></div>
+          <div id="actList"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">🗂️ Répartition des services</span></div>
+          <div id="servRep"></div>
+        </div>
+      </div>
+
+      <div class="three">
+        <div class="card" style="text-align:center;">
+          <div style="font-size:32px;margin-bottom:8px;">📅</div>
+          <div style="font-size:28px;font-weight:900;color:var(--blue);margin-bottom:4px;">342</div>
+          <div style="font-size:13px;color:var(--slate);">Réservations ce mois</div>
+          <div style="font-size:11px;color:#94A3B8;margin-top:4px;">+18% vs mois précédent</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:32px;margin-bottom:8px;">⏱️</div>
+          <div style="font-size:28px;font-weight:900;color:var(--green);margin-bottom:4px;">1h 24m</div>
+          <div style="font-size:13px;color:var(--slate);">Délai moyen d'intervention</div>
+          <div style="font-size:11px;color:#94A3B8;margin-top:4px;">-12 min vs objectif</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:32px;margin-bottom:8px;">💬</div>
+          <div style="font-size:28px;font-weight:900;color:var(--primary);margin-bottom:4px;">1 240</div>
+          <div style="font-size:13px;color:var(--slate);">Avis publiés ce mois</div>
+          <div style="font-size:11px;color:#94A3B8;margin-top:4px;">94% positifs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PRESTATAIRES ══ -->
+    <div class="ts" id="tab-prestas">
+      <div class="card">
+        <div class="ch"><span class="ct">🔧 Gestion des prestataires</span><button class="btn-p" onclick="T('➕ Formulaire ajout prestataire')">+ Ajouter</button></div>
+        <div class="fbar">
+          <input class="fi" placeholder="🔍 Rechercher un prestataire..." oninput="filterP(this.value)" style="flex:1;max-width:300px;"/>
+          <select class="fsel" onchange="filterPSt(this.value)">
+            <option value="">Tous les statuts</option>
+            <option value="actif">Actifs</option>
+            <option value="suspendu">Suspendus</option>
+            <option value="attente">En attente</option>
+          </select>
+          <select class="fsel">
+            <option>Tous les services</option>
+            <option>Plomberie</option><option>Électricité</option><option>Ménage</option><option>Jardinage</option>
+          </select>
+          <button class="btn-o" onclick="T('📥 Export CSV généré')">📥 Export</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>Prestataire</th><th>Service</th><th>Ville</th><th>Note</th><th>Missions</th><th>Revenus</th><th>Statut</th><th>Actions</th></tr></thead>
+            <tbody id="ptable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ UTILISATEURS ══ -->
+    <div class="ts" id="tab-users">
+      <div class="card">
+        <div class="ch"><span class="ct">👥 Gestion des utilisateurs</span><button class="btn-p" onclick="showM()">+ Ajouter</button></div>
+        <div class="fbar">
+          <input class="fi" placeholder="🔍 Rechercher un utilisateur..." style="flex:1;max-width:300px;"/>
+          <select class="fsel"><option>Tous les rôles</option><option>Client</option><option>Prestataire</option><option>Admin</option></select>
+          <button class="btn-o" onclick="T('📥 Export CSV généré')">📥 Export</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Inscrit le</th><th>Dernière co.</th><th>Statut</th><th>Actions</th></tr></thead>
+            <tbody id="utable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ RÉSERVATIONS ══ -->
+    <div class="ts" id="tab-reservations">
+      <div class="card">
+        <div class="ch"><span class="ct">📅 Toutes les réservations</span><button class="btn-o" onclick="T('📥 Export CSV généré')">📥 Export</button></div>
+        <div class="fbar">
+          <input class="fi" placeholder="🔍 N°, client, prestataire..." style="flex:1;max-width:300px;"/>
+          <select class="fsel"><option>Tous statuts</option><option>En cours</option><option>Confirmé</option><option>Terminé</option><option>Annulé</option></select>
+          <input type="date" class="fi"/>
+          <input type="date" class="fi"/>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>N°</th><th>Client</th><th>Prestataire</th><th>Service</th><th>Date</th><th>Montant</th><th>Statut</th><th>Actions</th></tr></thead>
+            <tbody id="rtable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VALIDATION ══ -->
+    <div class="ts" id="tab-validation">
+      <div class="card">
+        <div class="ch"><span class="ct">⏳ Dossiers en attente de validation</span><span class="badge br2">3 dossiers</span></div>
+        <div id="valDetail"></div>
+      </div>
+    </div>
+
+    <!-- ══ REVENUS ══ -->
+    <div class="ts" id="tab-revenus">
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="kpi g"><div class="kt"><span class="ki">💰</span><span class="ktr tu">+24%</span></div><div class="kv">184 K MAD</div><div class="kl">Revenus ce mois</div><div class="ks">Objectif : 200K MAD</div></div>
+        <div class="kpi b"><div class="kt"><span class="ki">📊</span><span class="ktr tu">+18%</span></div><div class="kv">2.18 M MAD</div><div class="kl">Revenus annuels</div><div class="ks">+340K vs année précédente</div></div>
+        <div class="kpi au"><div class="kt"><span class="ki">🏆</span><span class="ktr tn">stable</span></div><div class="kv">5%</div><div class="kl">Commission moyenne</div><div class="ks">Sur toutes les transactions</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ct">📈 Évolution des revenus (12 mois)</span><button class="btn-o" onclick="T('📥 Export rapport revenus')">📥 Export</button></div>
+        <div class="chart-b" id="revChart"></div>
+      </div>
+    </div>
+
+    <!-- ══ PARAMÈTRES ══ -->
+    <div class="ts" id="tab-settings">
+      <div class="two">
+        <div class="card">
+          <div class="ct" style="margin-bottom:18px;">⚙️ Paramètres généraux</div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <label style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;display:block;margin-bottom:7px;">Nom de la plateforme</label>
+              <input type="text" value="ServicesPlus" class="fi" style="width:100%;"/>
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;display:block;margin-bottom:7px;">Commission (%)</label>
+              <input type="number" value="5" class="fi" style="width:100%;"/>
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;display:block;margin-bottom:7px;">Email de contact</label>
+              <input type="email" value="contact@servicesplus.sn" class="fi" style="width:100%;"/>
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;display:block;margin-bottom:7px;">Téléphone support</label>
+              <input type="tel" value="+221 33 000 00 00" class="fi" style="width:100%;"/>
+            </div>
+            <button class="btn-p" onclick="T('✅ Paramètres sauvegardés !')">💾 Sauvegarder les modifications</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct" style="margin-bottom:18px;">🔔 Notifications système</div>
+          <div id="notifToggles"></div>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid #F1F5F9;">
+            <div class="ct" style="font-size:14px;margin-bottom:14px;">🔐 Sécurité</div>
+            <button class="btn-o" style="width:100%;margin-bottom:10px;" onclick="T('🔑 Lien de réinitialisation envoyé')">🔑 Changer le mot de passe admin</button>
+            <button class="btn-o" style="width:100%;color:#DC2626;border-color:#FECACA;" onclick="T('🗑️ Cache vidé avec succès')">🗑️ Vider le cache système</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LOGS ══ -->
+    <div class="ts" id="tab-logs">
+      <div class="card">
+        <div class="ch">
+          <span class="ct">📋 Logs système</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-s sb3" onclick="renderLogs()">↻ Actualiser</button>
+            <button class="btn-o" onclick="T('📥 Logs exportés')">📥 Export</button>
+            <button class="btn-o" style="color:#DC2626;border-color:#FECACA;" onclick="T('🗑️ Logs vidés')">🗑️ Vider</button>
+          </div>
+        </div>
+        <div id="logsDiv" style="background:#0F172A;border-radius:12px;padding:18px;font-family:'Courier New',monospace;font-size:12px;color:#4ADE80;max-height:400px;overflow-y:auto;line-height:1.8;"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<footer>
+  <div class="fbot">
+    <span>© 2025 <b>ServicesPlus</b> — Panel Administrateur</span>
+    <span>Version 2.0.1 • Fait par le <b>Groupe 18 — UNCHK</b></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- MODAL AJOUT UTILISATEUR -->
+<div class="mo" id="modal">
+  <div class="moc">
+    <div style="font-weight:900;font-size:20px;margin-bottom:6px;">➕ Ajouter un utilisateur</div>
+    <div style="color:var(--slate);font-size:13px;margin-bottom:20px;">Créer un nouveau compte manuellement</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+      <div>
+        <label style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;display:block;margin-bottom:6px;">Prénom</label>
+        <input type="text" class="fi" style="width:100%;" placeholder="Prénom"/>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;display:block;margin-bottom:6px;">Nom</label>
+        <input type="text" class="fi" style="width:100%;" placeholder="Nom"/>
+      </div>
+      <div style="grid-column:1/-1;">
+        <label style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;display:block;margin-bottom:6px;">Email</label>
+        <input type="email" class="fi" style="width:100%;" placeholder="email@exemple.com"/>
+      </div>
+      <div style="grid-column:1/-1;">
+        <label style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;display:block;margin-bottom:6px;">Rôle</label>
+        <select class="fsel" style="width:100%;">
+          <option>Client</option><option>Prestataire</option><option>Admin</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeM()" style="flex:1;padding:12px;background:#F8FAFC;border:1.5px solid var(--border);border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;color:var(--slate);">Annuler</button>
+      <button onclick="closeM();T('✅ Utilisateur créé avec succès !')" style="flex:2;padding:12px;background:linear-gradient(135deg,#E85D26,#F59E0B);color:white;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px;">Créer →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════ DONNÉES ════ */
+const PD = [
+  {nom:"Karim Benali", service:"Plombier",    ville:"Dakar", note:4.9, missions:350, revenus:"52K MAD",  statut:"actif"},
+  {nom:"Sara Mansouri",service:"Ménage",       ville:"Dakar", note:4.8, missions:210, revenus:"34K MAD",  statut:"actif"},
+  {nom:"Ahmed Ziani",  service:"Électricien",  ville:"Thiès", note:4.7, missions:480, revenus:"96K MAD",  statut:"actif"},
+  {nom:"Fatima Alaoui",service:"Jardinière",   ville:"Dakar", note:4.9, missions:180, revenus:"28K MAD",  statut:"actif"},
+  {nom:"Omar Ndiaye",  service:"Peintre",      ville:"Dakar", note:4.6, missions:140, revenus:"22K MAD",  statut:"suspendu"},
+  {nom:"Zineb Alami",  service:"Ménage",       ville:"Dakar", note:null,missions:0,   revenus:"0 MAD",    statut:"attente"},
+];
+
+const UD = [
+  {nom:"Mohammed Dia",  email:"m.dia@email.com",       role:"Client",      date:"12/01/2024",last:"Il y a 1h",   statut:"actif"},
+  {nom:"Nadia Chrif",   email:"n.chrif@email.com",     role:"Client",      date:"15/02/2024",last:"Il y a 3h",   statut:"actif"},
+  {nom:"Youssef Amrani",email:"y.amrani@email.com",    role:"Client",      date:"20/03/2024",last:"Il y a 1j",   statut:"actif"},
+  {nom:"Karim Benali",  email:"k.benali@email.com",    role:"Prestataire", date:"05/01/2022",last:"Il y a 2h",   statut:"actif"},
+  {nom:"Admin Master",  email:"admin@servicesplus.sn", role:"Admin",       date:"01/01/2022",last:"Maintenant",  statut:"actif"},
+  {nom:"Compte Test",   email:"test@test.com",          role:"Client",      date:"01/12/2024",last:"Il y a 10j",  statut:"suspendu"},
+];
+
+const RD = [
+  {id:"RES-001",client:"Mohammed D.",presta:"Karim B.",  service:"Plomberie",  date:"Auj. 14:00",  montant:"450 MAD",statut:"en-cours"},
+  {id:"RES-002",client:"Nadia C.",   presta:"Sara M.",   service:"Ménage",      date:"Dem. 09:00",  montant:"240 MAD",statut:"confirme"},
+  {id:"RES-003",client:"Youssef A.", presta:"Ahmed Z.",  service:"Électricité", date:"06/01 10:30", montant:"600 MAD",statut:"attente"},
+  {id:"RES-004",client:"Leila B.",   presta:"Fatima A.", service:"Jardinage",   date:"07/01 08:00", montant:"300 MAD",statut:"termine"},
+];
+
+const VD = [
+  {nom:"Omar Chrif",  service:"Électricien",ville:"Dakar",docs:3,time:"Il y a 2h", icon:"👨‍🔧"},
+  {nom:"Zineb Alami", service:"Ménage",     ville:"Dakar",docs:4,time:"Il y a 5h", icon:"👩‍🏠"},
+  {nom:"Rachid Tazi", service:"Jardinier",  ville:"Thiès",docs:2,time:"Il y a 1j", icon:"👨‍🌾"},
+];
+
+const ACT = [
+  {icon:"📅",bg:"#FFF0EB",msg:"Nouvelle réservation — Plomberie — Mohammed D.",  time:"Il y a 2 min"},
+  {icon:"✅",bg:"#ECFDF5",msg:"Mission terminée — Karim Benali — 450 MAD reçus", time:"Il y a 8 min"},
+  {icon:"👤",bg:"#EFF6FF",msg:"Nouvelle inscription — Aïcha Sow (Client)",       time:"Il y a 15 min"},
+  {icon:"⭐",bg:"#FFFBEB",msg:"Avis 5★ publié — Mohammed pour Karim Benali",    time:"Il y a 22 min"},
+  {icon:"🔧",bg:"#F5F3FF",msg:"Dossier prestataire soumis — Omar Chrif",         time:"Il y a 2h"},
+  {icon:"💰",bg:"#ECFDF5",msg:"Paiement 600 MAD reçu — RES-003",                time:"Il y a 3h"},
+];
+
+const SR = [
+  {nom:"Plomberie",   pct:28,color:"#2563EB"},{nom:"Ménage",pct:24,color:"#E85D26"},
+  {nom:"Électricité", pct:18,color:"#D97706"},{nom:"Jardinage",pct:12,color:"#059669"},
+  {nom:"Peinture",    pct:9, color:"#7C3AED"},{nom:"Autres",pct:9,color:"#64748B"},
+];
+
+const NOTIFS_DATA = [
+  ["Email nouvelles inscriptions","Alerte à chaque nouvel utilisateur",true],
+  ["Alertes paiements","Transactions importantes",true],
+  ["Rapport hebdomadaire","Envoyé chaque lundi matin",false],
+  ["Alertes sécurité","Connexions suspectes",true],
+];
+
+const M6  = ["Août","Sep","Oct","Nov","Déc","Jan"];
+const V6  = [195,210,178,230,220,342];
+const M12 = ["Fév","Mar","Avr","Mai","Jun","Jul","Août","Sep","Oct","Nov","Déc","Jan"];
+const V12 = [120,145,160,178,195,188,195,210,178,230,220,342];
+const VR  = [120,145,160,178,195,188,195,210,178,230,220,184];
+
+const SM = {
+  "en-cours":{l:"En cours",  c:"bb2"},
+  "confirme": {l:"Confirmé",  c:"bg2"},
+  "attente":  {l:"En attente",c:"bo2"},
+  "termine":  {l:"Terminé",   c:"bgy"},
+  "annule":   {l:"Annulé",    c:"br2"},
+};
+
+/* ════ INIT ════ */
+window.onload = () => {
+  document.getElementById('adminDate').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  renderChart(M6, V6, 'mainChart');
+  renderChart(M12, VR.map(v=>v*1000), 'revChart');
+  renderValList();
+  renderAct();
+  renderServRep();
+  renderP(PD);
+  renderU(UD);
+  renderR(RD);
+  renderValDetail();
+  renderLogs();
+  renderNotifToggles();
+};
+
+/* ════ ONGLETS ════ */
+function goTab(id, el) {
+  document.querySelectorAll('.ts').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.mi').forEach(m => m.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+/* ════ GRAPHIQUE ════ */
+function renderChart(mois, vals, cid) {
+  const max = Math.max(...vals);
+  document.getElementById(cid).innerHTML = vals.map((v,i) => `
+    <div class="bc">
+      <div class="bv">${v > 999 ? (v/1000).toFixed(0)+'K' : v}</div>
+      <div class="bf" style="height:${(v/max)*106}px;background:${i===vals.length-1?'linear-gradient(180deg,#E85D26,#F59E0B)':'#FFE8DF'};"></div>
+      <div class="bl">${mois[i]}</div>
+    </div>
+  `).join('');
+}
+
+function setCP(p) { renderChart(p==='6m'?M6:M12, p==='6m'?V6:V12, 'mainChart'); }
+
+/* ════ VALIDATION LISTE ════ */
+function renderValList() {
+  document.getElementById('valList').innerHTML = VD.map((v,i) => `
+    <div class="vi">
+      <div class="vl">
+        <div class="vav">${v.icon}</div>
+        <div>
+          <div class="vn">${v.nom}</div>
+          <div class="vm">${v.service} • ${v.ville} • Docs : ${v.docs}/4 • ${v.time}</div>
+        </div>
+      </div>
+      <div class="va-btns">
+        <button class="btn-s sg" onclick="T('✅ ${v.nom} validé !')">✓ Valider</button>
+        <button class="btn-s so" onclick="T('📋 Dossier de ${v.nom}')">Dossier</button>
+        <button class="btn-s sr" onclick="T('✕ Dossier de ${v.nom} refusé')">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ════ ACTIVITÉ ════ */
+function renderAct() {
+  document.getElementById('actList').innerHTML = ACT.map(a => `
+    <div class="ai">
+      <div class="aico" style="background:${a.bg}">${a.icon}</div>
+      <div><div class="am">${a.msg}</div><div class="at">${a.time}</div></div>
+    </div>
+  `).join('');
+}
+
+/* ════ RÉPARTITION SERVICES ════ */
+function renderServRep() {
+  document.getElementById('servRep').innerHTML = SR.map(s => `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="width:10px;height:10px;border-radius:50%;background:${s.color};flex-shrink:0;"></div>
+      <span style="font-size:13px;font-weight:600;flex:1;">${s.nom}</span>
+      <div style="flex:2;height:8px;background:#F1F5F9;border-radius:20px;overflow:hidden;">
+        <div style="height:100%;width:${s.pct}%;background:${s.color};border-radius:20px;"></div>
+      </div>
+      <span style="font-size:12px;font-weight:700;color:${s.color};width:32px;text-align:right;">${s.pct}%</span>
+    </div>
+  `).join('');
+}
+
+/* ════ TABLE PRESTATAIRES ════ */
+function renderP(data) {
+  document.getElementById('ptable').innerHTML = data.map(p => `
+    <tr>
+      <td style="font-weight:700;">🧑‍🔧 ${p.nom}</td>
+      <td style="color:var(--slate);">${p.service}</td>
+      <td style="color:var(--slate);">📍 ${p.ville}</td>
+      <td>${p.note ? '<span style="color:#F59E0B;">★</span> '+p.note : '<span style="color:#CBD5E1;">—</span>'}</td>
+      <td style="font-weight:700;">${p.missions}</td>
+      <td style="font-weight:800;color:#059669;">${p.revenus}</td>
+      <td><span class="badge ${p.statut==='actif'?'bg2':p.statut==='suspendu'?'br2':'bo2'}">${p.statut.charAt(0).toUpperCase()+p.statut.slice(1)}</span></td>
+      <td>
+        <div style="display:flex;gap:5px;">
+          <button class="btn-s so" onclick="T('📋 Profil de ${p.nom}')">Voir</button>
+          ${p.statut==='actif'    ? `<button class="btn-s sr" onclick="T('⏸️ ${p.nom} suspendu')">Suspendre</button>` : ''}
+          ${p.statut==='suspendu' ? `<button class="btn-s sg" onclick="T('✅ ${p.nom} réactivé')">Réactiver</button>` : ''}
+          ${p.statut==='attente'  ? `<button class="btn-s sg" onclick="T('✅ ${p.nom} validé')">Valider</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterP(q) {
+  renderP(PD.filter(p => p.nom.toLowerCase().includes(q.toLowerCase()) || p.service.toLowerCase().includes(q.toLowerCase())));
+}
+function filterPSt(st) {
+  renderP(st ? PD.filter(p => p.statut === st) : PD);
+}
+
+/* ════ TABLE UTILISATEURS ════ */
+function renderU(data) {
+  const rc = {Client:'bb2', Prestataire:'bo2', Admin:'br2'};
+  document.getElementById('utable').innerHTML = data.map(u => `
+    <tr>
+      <td style="font-weight:700;">👤 ${u.nom}</td>
+      <td style="color:var(--slate);">${u.email}</td>
+      <td><span class="badge ${rc[u.role]||'bgy'}">${u.role}</span></td>
+      <td style="color:var(--slate);">${u.date}</td>
+      <td style="color:var(--slate);">${u.last}</td>
+      <td><span class="badge ${u.statut==='actif'?'bg2':'br2'}">${u.statut.charAt(0).toUpperCase()+u.statut.slice(1)}</span></td>
+      <td>
+        <div style="display:flex;gap:5px;">
+          <button class="btn-s so" onclick="T('👤 Profil de ${u.nom}')">Voir</button>
+          <button class="btn-s ${u.statut==='actif'?'sr':'sg'}" onclick="T('${u.statut==='actif'?'⏸️ Suspendu':'✅ Réactivé'}')">${u.statut==='actif'?'Suspendre':'Réactiver'}</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ════ TABLE RÉSERVATIONS ════ */
+function renderR(data) {
+  document.getElementById('rtable').innerHTML = data.map(r => `
+    <tr>
+      <td style="font-weight:700;color:#94A3B8;font-size:11px;">${r.id}</td>
+      <td style="font-weight:700;">${r.client}</td>
+      <td>${r.presta}</td>
+      <td style="color:var(--slate);">${r.service}</td>
+      <td style="color:var(--slate);">${r.date}</td>
+      <td style="font-weight:800;color:var(--primary);">${r.montant}</td>
+      <td><span class="badge ${SM[r.statut]?.c||'bgy'}">${SM[r.statut]?.l||r.statut}</span></td>
+      <td>
+        <div style="display:flex;gap:5px;">
+          <button class="btn-s so" onclick="T('📋 Détails ${r.id}')">Détails</button>
+          ${r.statut==='attente' ? `<button class="btn-s sr" onclick="T('✕ ${r.id} annulée')">Annuler</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ════ VALIDATION DÉTAIL ════ */
+function renderValDetail() {
+  const docNames = ["Pièce d'identité","Diplôme/Certificat","Assurance RC","Photo profil"];
+  document.getElementById('valDetail').innerHTML = VD.map(v => `
+    <div style="background:#F8FAFC;border-radius:16px;padding:22px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+        <div style="display:flex;gap:14px;align-items:center;">
+          <div style="width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,#E85D26,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:26px;">${v.icon}</div>
+          <div>
+            <div style="font-weight:800;font-size:17px;">${v.nom}</div>
+            <div style="font-size:13px;color:var(--slate);">${v.service} • ${v.ville} • Soumis ${v.time}</div>
+          </div>
+        </div>
+        <span class="badge bo2">En attente</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+        ${docNames.map((doc,j) => `
+          <div style="background:white;border-radius:12px;padding:12px;text-align:center;border:1.5px solid ${j<v.docs?'#059669':'#E2E8F0'};">
+            <div style="font-size:20px;margin-bottom:6px;">${j<v.docs?'✅':'📄'}</div>
+            <div style="font-size:11px;font-weight:600;color:${j<v.docs?'#059669':'#94A3B8'};">${doc}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-p" style="flex:1;" onclick="T('✅ ${v.nom} validé avec succès !')">✓ Valider le dossier</button>
+        <button class="btn-o" onclick="T('📋 Dossier complet de ${v.nom}')">📋 Voir dossier</button>
+        <button style="padding:10px 18px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;" onclick="T('✕ Dossier de ${v.nom} refusé')">✕ Refuser</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ════ LOGS ════ */
+function renderLogs() {
+  const logs = [
+    {t:"INFO", d:"2025-01-07 14:32:11", msg:"Connexion Admin — IP: 192.168.1.1"},
+    {t:"INFO", d:"2025-01-07 14:30:45", msg:"Nouvelle réservation RES-005 créée"},
+    {t:"INFO", d:"2025-01-07 14:28:22", msg:"Paiement 450 MAD reçu — RES-001"},
+    {t:"WARN", d:"2025-01-07 14:15:03", msg:"Tentative connexion échouée — user@test.com"},
+    {t:"INFO", d:"2025-01-07 13:55:11", msg:"Mission terminée — Karim Benali — RES-001"},
+    {t:"INFO", d:"2025-01-07 13:42:08", msg:"Nouvel utilisateur inscrit — Aïcha Sow"},
+    {t:"OK",   d:"2025-01-07 12:30:00", msg:"Backup automatique — Succès"},
+    {t:"INFO", d:"2025-01-07 12:00:01", msg:"Rapport hebdo envoyé — admin@servicesplus.sn"},
+    {t:"OK",   d:"2025-01-07 08:00:00", msg:"Démarrage serveur — ServicesPlus v2.0.1"},
+  ];
+  document.getElementById('logsDiv').innerHTML = logs.map(l => `
+    <div style="color:${l.t==='WARN'?'#F59E0B':l.t==='OK'?'#34D399':'#4ADE80'}">
+      [${l.t.padEnd(4)}] ${l.d} — ${l.msg}
+    </div>
+  `).join('');
+}
+
+/* ════ NOTIF TOGGLES ════ */
+function renderNotifToggles() {
+  document.getElementById('notifToggles').innerHTML = NOTIFS_DATA.map(([titre,sub,on]) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div><div style="font-weight:600;font-size:14px;">${titre}</div><div style="font-size:12px;color:var(--slate);">${sub}</div></div>
+      <div class="sw" onclick="toggleSw(this)" style="background:${on?'var(--primary)':'#E2E8F0'};">
+        <div class="sw-dot" style="left:${on?22:3}px;"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSw(el) {
+  const dot = el.querySelector('.sw-dot');
+  const isOn = dot.style.left !== '3px';
+  dot.style.left = isOn ? '3px' : '22px';
+  el.style.background = isOn ? '#E2E8F0' : 'var(--primary)';
+}
+
+/* ════ MODAL ════ */
+function showM()  { document.getElementById('modal').classList.add('show'); }
+function closeM() { document.getElementById('modal').classList.remove('show'); }
+document.getElementById('modal').addEventListener('click', e => {
+  if(e.target === document.getElementById('modal')) closeM();
+});
+
+/* ════ TOAST ════ */
+function T(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+
+<script>
+window.addEventListener('DOMContentLoaded', async () => {
+  const user = Auth.getUser();
+  if (!user || user.role !== 'admin') {
+    alert('Accès réservé aux administrateurs.');
+    location.href = '08_connexion.html'; return;
+  }
+
+  // Charger les stats
+  try {
+    const stats = await apiFetch('admin.php?action=stats');
+    if (stats.success) {
+      const s = stats.data.stats;
+      // Mettre à jour les chiffres du dashboard admin
+      document.querySelectorAll('[data-stat="users"]').forEach(el => el.textContent = s.total_users);
+      document.querySelectorAll('[data-stat="prestataires"]').forEach(el => el.textContent = s.total_prestataires);
+      document.querySelectorAll('[data-stat="reservations"]').forEach(el => el.textContent = s.total_reservations);
+      document.querySelectorAll('[data-stat="revenus"]').forEach(el => el.textContent = parseInt(s.revenus_total).toLocaleString() + ' FCFA');
+    }
+  } catch(e) {}
+
+  // Valider un prestataire
+  window.validerPrestataire = async (id) => {
+    const data = await apiFetch('admin.php?action=valider', 'POST', { prestataire_id: id });
+    alert(data.success ? '✅ Prestataire validé !' : '❌ ' + data.message);
+    if (data.success) location.reload();
+  };
+
+  // Suspendre un user
+  window.suspendrUser = async (id) => {
+    const data = await apiFetch('admin.php?action=suspendre', 'POST', { user_id: id });
+    alert(data.success ? '⏸️ Utilisateur suspendu' : '❌ ' + data.message);
+    if (data.success) location.reload();
+  };
+});
+</script>
+
+</body>
+</html>
